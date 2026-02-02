@@ -1,0 +1,47 @@
+<!-- 
+    Author: Vien Tran
+    CoPilot: Google Gemini
+    Purpose: Contact Webpage for COP4331 project.
+    Desc.: A webpage that allows a logged-in user to search, access, and edit contacts.
+
+    Notes: All comments below are for my personal use for future referencing and are excess.
+        - They are from referencing videos, code, and AI explanations.
+    -->
+
+<!DOCTYPE html> <!-- Declares the HTML type -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paradise Pages | Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/contactPage.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Paradise<span>Pages</span></div>
+        <div class="nav-links">
+            <a href="#" class="active">Contacts</a>
+            <a href="#">About</a>
+            <button class="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <main class="hero-section">
+        <div class="search-wrapper">
+            <h1>Who are you looking for?</h1>
+            <p>Search your directory for contacts, emails, and more.</p>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="contactSearch" placeholder="Start typing a name..." autocomplete="off">
+            </div>
+            
+            <div id="statusMessage" class="status-text">Ready to search...</div>
+        </div>
+    </main>
+
+</body>
+</html>
