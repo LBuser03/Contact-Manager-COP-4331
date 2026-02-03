@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Manager - Home</title>
+
+    <script type="text/javascript" src="js/code.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,17 +32,53 @@
             bottom: 0;
             width: 100%;
         }
+        .buttons {
+            padding: 10px 16px;
+            margin: 10px;
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .buttons:hover {
+            background-color: #005fa3;
+        }
     </style>
+
+    <script>
+        requireLogin();
+    </script>
 </head>
+
 <body>
     <header>
         <h1>Welcome to Contact Manager</h1>
+        <p id="welcomeName"></p>
     </header>
+
     <main>
         <p>This is your home page. Use the navigation to manage your contacts.</p>
+
+        <!-- Example navigation buttons -->
+        <button class="buttons" onclick="window.location.href='contacts.html'">
+            Manage Contacts
+        </button>
+
+        <br/>
+
+        <button class="buttons" onclick="doLogout()">
+            Logout
+        </button>
     </main>
+
     <footer>
         <p>&copy; 2023 Contact Manager</p>
     </footer>
+
+    <script>
+        document.getElementById("welcomeName").innerText =
+            `Hello, ${firstName} ${lastName}`;
+    </script>
 </body>
 </html>

@@ -4,211 +4,288 @@ const extension = 'php';
 let userId = 0;
 let firstName = "";
 let lastName = "";
+
 function doLogin()
 {
-	userId = 0;
-	firstName = "";
-	lastName = "";
-	
-	let login = document.getElementById("loginName").value;
-	let password = document.getElementById("loginPassword").value;
-//	var hash = md5( password );
-	
-	document.getElementById("loginResult").innerHTML = "";
+  userId = 0;
+  firstName = "";
+  lastName = "";
 
-	let tmp = {login:login,password:password};
-//	var tmp = {login:login,password:hash};
-	let jsonPayload = JSON.stringify( tmp );
-	
-	let url = urlBase + '/Login.' + extension;
+  const login = document.getElementById("loginName")?.value.trim() ?? "";
+  const password = document.getElementById("loginPassword")?.value ?? "";
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				let jsonObject = JSON.parse( xhr.responseText );
-				userId = jsonObject.id;
-		
-				if( userId < 1 )
-				{		
-					document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
-					return;
-				}
-		
-				firstName = jsonObject.firstName;
-				lastName = jsonObject.lastName;
+  const out = document.getElementById("loginResult");
+  if (out) out.innerHTML = "";
 
-				saveCookie();
-	
-				window.location.href = "home.html"; 
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("loginResult").innerHTML = err.message;
-	}
+  const payload = JSON.stringify({ login: login, password: password });
+  const url = `${urlBase}/Login.${extension}`;
 
-}
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
-function saveCookie()
-{
-	let minutes = 20;
-	let date = new Date();
-	date.setTime(date.getTime()+(minutes*60*1000));	
-	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
-}
+  xhr.onreadystatechange = function ()
+  {
+    if (xhr.readyState !== 4) return;
+    if (xhr.status !== 200)
+    {
+      if (out) out.innerHTML = `Login failed (HTTP ${xhr.status}).`;
+      console.error("Login error:", xhr.status, xhr.responseText);
+      return;
+    }
 
-function readCookie()
-{
-	userId = -1;
-	let data = document.cookie;
-	let splits = data.split(",");
-	for(var i = 0; i < splits.length; i++) 
-	{
-		let thisOne = splits[i].trim();
-		let tokens = thisOne.split("=");
-		if( tokens[0] == "firstName" )
-		{
-			firstName = tokens[1];
-		}
-		else if( tokens[0] == "lastName" )
-		{
-			lastName = tokens[1];
-		}
-		else if( tokens[0] == "userId" )
-		{
-			userId = parseInt( tokens[1].trim() );
-		}
-	}
-	
-	if( userId < 0 )
-	{
-		window.location.href = "index.html";
-	}
-	else
-	{
-//		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
-	}
-}
+    let json;
+    try
+    {
+      json = JSON.parse(xhr.responseText);
+    }
+    catch (e)
+    {
+      if (out) out.innerHTML = "Login failed (server returned non-JSON).";
+      console.error("Login non-JSON response:", xhr.responseText);
+      return;
+    }
 
-function doLogout()
-{
-	userId = 0;
-	firstName = "";
-	lastName = "";
-	document.cookie = "firstName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-	window.location.href = "index.html";
-}
+    if (!json.id || json.id < 1)
+    {
+      const msg = (json.error && json.error.length > 0)
+        ? json.error
+        : "User/Password combination incorrect";
+      if (out) out.innerHTML = msg;
+      return;
+    }
 
-function addColor()
-{
-	let newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
+    userId = json.id;
+    firstName = json.firstName || "";
+    lastName = json.lastName || "";
 
-	let tmp = {color:newColor,userId,userId};
-	let jsonPayload = JSON.stringify( tmp );
+    saveCookie();
+    window.location.href = "home.html";
+  };
 
-	let url = urlBase + '/AddColor.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorAddResult").innerHTML = err.message;
-	}
-	
-}
-
-function searchColor()
-{
-	let srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
-	
-	let colorList = "";
-
-	let tmp = {search:srch,userId:userId};
-	let jsonPayload = JSON.stringify( tmp );
-
-	let url = urlBase + '/SearchColors.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				let jsonObject = JSON.parse( xhr.responseText );
-				
-				for( let i=0; i<jsonObject.results.length; i++ )
-				{
-					colorList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						colorList += "<br />\r\n";
-					}
-				}
-				
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorSearchResult").innerHTML = err.message;
-	}
-	
+  xhr.send(payload);
 }
 
 function doRegister()
 {
-	let login = document.getElementById("registerLoginName").value;
-	let password = document.getElementById("registerPassword").value;
-	let firstName = document.getElementById("registerFirstName").value;
-	let lastName = document.getElementById("registerLastName").value;
+  const login = document.getElementById("registerLoginName")?.value.trim() ?? "";
+  const password = document.getElementById("registerPassword")?.value ?? "";
+  const f = document.getElementById("registerFirstName")?.value.trim() ?? "";
+  const l = document.getElementById("registerLastName")?.value.trim() ?? "";
 
-	let tmp = {loginName: login, password: password, firstName: firstName, lastName: lastName};
-	let jsonPayload = JSON.stringify(tmp);
+  const out = document.getElementById("registerResult");
+  if (out) out.innerHTML = "";
 
-	let url = urlBase + '/Register.' + extension;
+  if (!login || !password || !f || !l)
+  {
+    if (out) out.innerHTML = "Please fill in all fields.";
+    return;
+  }
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  const payload = JSON.stringify({
+    loginName: login,
+    password: password,
+    firstName: f,
+    lastName: l
+  });
 
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4) {
-			if (xhr.status === 200) {
-				let jsonResponse = JSON.parse(xhr.responseText);
-				document.getElementById("registerResult").innerHTML = jsonResponse.message;
-			} else {
-				document.getElementById("registerResult").innerHTML = "Error: Unable to register.";
-			}
-		}
-	};
+  const url = `${urlBase}/Register.${extension}`;
 
-	xhr.send(jsonPayload);
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  xhr.onreadystatechange = function ()
+  {
+    if (xhr.readyState !== 4) return;
+
+    if (xhr.status !== 200)
+    {
+      if (out) out.innerHTML = `Register failed (HTTP ${xhr.status}).`;
+      console.error("Register error:", xhr.status, xhr.responseText);
+      return;
+    }
+
+    let json;
+    try
+    {
+      json = JSON.parse(xhr.responseText);
+    }
+    catch (e)
+    {
+      if (out) out.innerHTML = "Register failed (server returned non-JSON).";
+      console.error("Register non-JSON response:", xhr.responseText);
+      return;
+    }
+
+    if (json.error && json.error.length > 0)
+    {
+      if (out) out.innerHTML = json.error;
+      return;
+    }
+
+    if (!json.id || json.id < 1)
+    {
+      if (out) out.innerHTML = "Registration failed (no user id returned).";
+      return;
+    }
+
+    userId = json.id;
+    firstName = json.firstName || f;
+    lastName = json.lastName || l;
+
+    saveCookie();
+    window.location.href = "home.html";
+  };
+
+  xhr.send(payload);
+}
+
+function doLogout()
+{
+  userId = 0;
+  firstName = "";
+  lastName = "";
+
+  document.cookie = "firstName=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+  document.cookie = "lastName=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+  document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+
+  window.location.href = "index.html";
+}
+
+function saveCookie()
+{
+  const minutes = 20;
+  const date = new Date();
+  date.setTime(date.getTime() + (minutes * 60 * 1000));
+
+  document.cookie = `firstName=${encodeURIComponent(firstName)}; expires=${date.toUTCString()}; path=/`;
+  document.cookie = `lastName=${encodeURIComponent(lastName)}; expires=${date.toUTCString()}; path=/`;
+  document.cookie = `userId=${encodeURIComponent(userId)}; expires=${date.toUTCString()}; path=/`;
+}
+
+function readCookie()
+{
+
+
+  const cookies = document.cookie.split(";").map(c => c.trim());
+  const map = {};
+
+  for (const c of cookies)
+  {
+    const idx = c.indexOf("=");
+    if (idx === -1) continue;
+    const k = c.slice(0, idx);
+    const v = c.slice(idx + 1);
+    map[k] = decodeURIComponent(v);
+  }
+
+  firstName = map.firstName || "";
+  lastName = map.lastName || "";
+  userId = map.userId ? parseInt(map.userId, 10) : 0;
+
+  return (userId && userId > 0);
+}
+
+function requireLogin()
+{
+  const ok = readCookie();
+  if (!ok)
+  {
+    window.location.href = "index.html";
+  }
+}
+
+
+function addColor()
+{
+  const newColor = document.getElementById("colorText")?.value ?? "";
+  const out = document.getElementById("colorAddResult");
+  if (out) out.innerHTML = "";
+
+  if (!userId || userId < 1)
+  {
+    if (out) out.innerHTML = "Please login first.";
+    return;
+  }
+
+  const payload = JSON.stringify({ color: newColor, userId: userId });
+  const url = `${urlBase}/AddColor.${extension}`;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  xhr.onreadystatechange = function ()
+  {
+    if (xhr.readyState !== 4) return;
+
+    if (xhr.status === 200)
+    {
+      if (out) out.innerHTML = "Color has been added";
+    }
+    else
+    {
+      if (out) out.innerHTML = `Add failed (HTTP ${xhr.status}).`;
+      console.error("AddColor error:", xhr.status, xhr.responseText);
+    }
+  };
+
+  xhr.send(payload);
+}
+
+function searchColor()
+{
+  const srch = document.getElementById("searchText")?.value ?? "";
+  const out = document.getElementById("colorSearchResult");
+  if (out) out.innerHTML = "";
+
+  if (!userId || userId < 1)
+  {
+    if (out) out.innerHTML = "Please login first.";
+    return;
+  }
+
+  const payload = JSON.stringify({ search: srch, userId: userId });
+  const url = `${urlBase}/SearchColors.${extension}`;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  xhr.onreadystatechange = function ()
+  {
+    if (xhr.readyState !== 4) return;
+
+    if (xhr.status !== 200)
+    {
+      if (out) out.innerHTML = `Search failed (HTTP ${xhr.status}).`;
+      console.error("SearchColors error:", xhr.status, xhr.responseText);
+      return;
+    }
+
+    let json;
+    try
+    {
+      json = JSON.parse(xhr.responseText);
+    }
+    catch (e)
+    {
+      if (out) out.innerHTML = "Search failed (server returned non-JSON).";
+      console.error("SearchColors non-JSON response:", xhr.responseText);
+      return;
+    }
+
+    if (out) out.innerHTML = "Color(s) has been retrieved";
+
+    const results = Array.isArray(json.results) ? json.results : [];
+    const html = results.map(x => `${x}`).join("<br/>\r\n");
+
+    // Your old code wrote into the first <p> tag; keep same behavior:
+    const p = document.getElementsByTagName("p")[0];
+    if (p) p.innerHTML = html;
+  };
+
+  xhr.send(payload);
 }
