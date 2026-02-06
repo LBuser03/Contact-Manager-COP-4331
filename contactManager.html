@@ -1,0 +1,64 @@
+<!-- 
+    Author: Vien Tran
+    CoPilot: Google Gemini
+    Purpose: Contact Webpage for COP4331 project.
+    Desc.: A webpage that allows a logged-in user to search, access, and edit contacts.
+
+    Notes: All comments below are for my personal use for future referencing and are excess.
+        - They are from referencing videos, code, and AI explanations.
+    -->
+
+<!DOCTYPE html> <!-- Declares the HTML type -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Manager Page</title>
+
+    <!-- Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/contactPage.css">
+    <!-- Functionality -->
+     <script type="text/javascript" src="js/code.js"></script>
+
+</head>
+
+<body>
+    <!-- Management Bar -->
+    <nav class="navbar">
+        <div class="logo">[Insert <span>PageName ]</span></div>
+        <div class="nav-links">
+            <a href="#" class="active">Your Contacts</a>
+
+            <!-- Logout Button -->
+            <button class="logout-btn" onclick="doLogout()">Logout </button> 
+        </div>
+    </nav>
+
+    <!-- Search and Contact Control Section -->
+    <main class="contactManagement">
+        <div class="search-wrapper">
+            <h1><span id = "loginName"></span>Who are you looking for?</h1>
+            <p>Search your directory for contacts, emails, and more.</p>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input onkeyup="searchContacts()" id="searchInfo" placeholder="Let's look here..." autocomplete="off">
+            </div>
+            
+            <div id="statusMessage" class="status-text">Ready to search...</div>
+        </div>
+    </main>
+
+    <!-- Footer: Information Center -->
+    <footer>
+        <p>COP4331 - Team 27 &copy; Spring 2026 Contact Page</p>
+    </footer>
+
+    <script>
+        document.getElementById("loginName").innerText =
+        `Hello, ${firstName} ${lastName}`;
+    </script>
+</body>
+</html>

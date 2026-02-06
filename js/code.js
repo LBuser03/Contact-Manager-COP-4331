@@ -60,7 +60,7 @@ function doLogin()
     lastName = json.lastName || "";
 
     saveCookie();
-    window.location.href = "home.html";
+    window.location.href = "contactManager.html"; // Go to contact page if successful.
   };
 
   xhr.send(payload);
@@ -235,9 +235,13 @@ function addColor()
   xhr.send(payload);
 }
 
-function searchColor()
+/* Searches for a user the database. 
+    Takes a text input that should be correlated to a name.
+    Returns 
+*/
+function searchContacts()
 {
-  const srch = document.getElementById("searchText")?.value ?? "";
+  const srch = document.getElementById("searchInfo")?.value ?? "";
   const out = document.getElementById("colorSearchResult");
   if (out) out.innerHTML = "";
 
