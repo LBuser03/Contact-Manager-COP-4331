@@ -9,13 +9,14 @@
     -->
 
 <!DOCTYPE html> <!-- Declares the HTML type -->
+<html lang = "en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Manager Page</title>
 
-    <!-- Design -->
+    <!-- Design and Style Sheets -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/contactPage.css">
@@ -27,28 +28,31 @@
 <body>
     <!-- Management Bar -->
     <nav class="navbar">
-        <div class="namePlate"><span id = "userNamePlate"></span></div>
+        <div class="namePlate"><span id = "namePlateText"></span></div>
         <div class="nav-links">
 
             <!-- Logout Button -->
-            <button class="logout-btn" onclick="doLogout()">Logout </button> 
+            <button class="logout-btn" onclick="doLogout()">Logout</button> 
         </div>
     </nav>
 
     <!-- Search and Contact Control Section -->
-    <main class="contactManagement">
-        <div class="search-wrapper">
-            <h1><span id = "loginName"></span>Who are you looking for?</h1>
-            <p>Search your directory for contacts, emails, and more.</p>
-            
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input onkeyup="searchContacts()" id="searchInfo" placeholder="Let's look here..." autocomplete="off">
-            </div>
-            
-            <div id="statusMessage" class="status-text">Ready to search...</div>
+    <div class="search-wrapper">
+        <label for="search-bar">Search Your Contacts</label>
+        
+        <!-- Search Bar -->
+        <input type="search" id ="searchText" placeholder="Search Contacts">
+    </div>
+
+    <!-- Contact Cards -->
+    <div class = "contact-cards">
+        <div class = "card">
+            <div class="firstName"> [Name] </div>
+            <div class="email"> [Email] </div>
+            <div class="phoneNumber">[Phone]</div>
         </div>
-    </main>
+    </div>
+
 
     <!-- Footer: Information Center -->
     <footer>
@@ -63,7 +67,7 @@
         document.getElementById("namePlateText").innerText = `${firstName} ${lastName}`;
 
         // 3. Insert into the Welcome Header (Big version)
-        document.getElementById("welcomeName").innerText = firstName;
+        //document.getElementById("welcomeName").innerText = firstName;
     </script>
 
         
