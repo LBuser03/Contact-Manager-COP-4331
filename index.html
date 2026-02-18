@@ -1,38 +1,578 @@
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>COP 4331 Contact Manager Login Page</title>
-	<script type="text/javascript" src="js/md5.js"></script>
-	<script type="text/javascript" src="js/code.js"></script>
-    <link href="css/styles.css" rel="stylesheet">	
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COP 4331 Contact Manager — Login</title>
 
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Geo:ital@0;1&family=Trade+Winds&display=swap" rel="stylesheet">
+  <!-- keep your scripts -->
+  <script type="text/javascript" src="js/md5.js"></script>
+  <script type="text/javascript" src="js/code.js"></script>
+
+  <link href="css/styles.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --deep0:#01050e;
+      --deep1:#021227;
+      --deep2:#032a45;
+      --deep3:#045f8a;
+
+      --text:#eaf6ff;
+      --muted:rgba(234,246,255,.74);
+
+      --accent:#33d6ff;
+      --accent2:#41ffb5;
+
+      --danger:#ff6b6b;
+
+      --cardA: rgba(2, 16, 30, 0.62);
+      --cardB: rgba(2, 16, 30, 0.86);
+
+      --stroke: rgba(255,255,255,.14);
+      --shadow: 0 28px 90px rgba(0,0,0,.70);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body { height:100%; }
+    body{
+      margin:0;
+      font-family: Ubuntu, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      overflow-x:hidden;
+
+      background:
+        radial-gradient(1200px 900px at 20% 10%, rgba(0, 200, 255, .28) 0%, transparent 58%),
+        radial-gradient(900px 700px at 85% 18%, rgba(65, 255, 181, .16) 0%, transparent 58%),
+        radial-gradient(900px 900px at 50% 110%, rgba(0, 160, 255, .22) 0%, transparent 56%),
+        linear-gradient(180deg, var(--deep2) 0%, var(--deep1) 48%, var(--deep0) 100%);
+    }
+
+    /* Strong vignette + depth */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1100px 700px at 50% 15%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(1300px 900px at 50% 70%, transparent 55%, rgba(0,0,0,.78) 92%),
+        radial-gradient(900px 700px at 50% 110%, rgba(0,0,0,.90), rgba(0,0,0,.95));
+      opacity: 1;
+      z-index: 0;
+    }
+
+    /* Ocean layers wrapper */
+    .ocean{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index: 1;
+      overflow:hidden;
+    }
+
+    /* Light rays */
+    .rays{
+      position:absolute;
+      inset:-20%;
+      opacity:.35;
+      background:
+        linear-gradient(120deg, transparent 0 35%, rgba(255,255,255,.08) 45%, transparent 55%),
+        linear-gradient(110deg, transparent 0 40%, rgba(51,214,255,.08) 50%, transparent 60%),
+        linear-gradient(100deg, transparent 0 42%, rgba(255,255,255,.06) 52%, transparent 62%);
+      filter: blur(1px);
+      mix-blend-mode: screen;
+      animation: raysMove 10s ease-in-out infinite alternate;
+    }
+    @keyframes raysMove{
+      from { transform: translate3d(-20px,-10px,0) rotate(-2deg); }
+      to   { transform: translate3d(20px, 14px,0) rotate(2deg); }
+    }
+
+    /* Caustics */
+    .caustics{
+      position:absolute;
+      inset:-25%;
+      opacity:.40;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.18), transparent 52%),
+        radial-gradient(circle at 60% 55%, rgba(255,255,255,.14), transparent 58%),
+        radial-gradient(circle at 82% 25%, rgba(255,255,255,.12), transparent 58%);
+      filter: blur(2px);
+      mix-blend-mode: soft-light;
+      animation: causticDrift 9s ease-in-out infinite alternate;
+    }
+    @keyframes causticDrift{
+      from { transform: translate3d(-18px, -14px, 0) scale(1.05); }
+      to   { transform: translate3d(26px, 18px, 0) scale(1.10); }
+    }
+
+    /* Deep glow blobs */
+    .glow{
+      position:absolute;
+      inset:0;
+      opacity:.45;
+      background:
+        radial-gradient(500px 300px at 20% 80%, rgba(51,214,255,.22), transparent 65%),
+        radial-gradient(520px 340px at 75% 75%, rgba(65,255,181,.18), transparent 68%),
+        radial-gradient(600px 380px at 50% 60%, rgba(0,170,255,.14), transparent 70%);
+      filter: blur(2px);
+    }
+
+    /* Particles */
+    .particles{
+      position:absolute;
+      inset:0;
+      opacity:.35;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.09) 0 1px, transparent 2px);
+      background-size: 140px 140px;
+      animation: particlesMove 18s linear infinite;
+    }
+    @keyframes particlesMove{
+      from { transform: translateY(0); }
+      to   { transform: translateY(-60px); }
+    }
+
+    /* Bubbles (lots) */
+    .bubble{
+      position:absolute;
+      bottom:-180px;
+      border-radius:999px;
+      border:1px solid rgba(234,246,255,.30);
+      background: rgba(234,246,255,.05);
+      box-shadow: 0 0 26px rgba(51,214,255,.20);
+      opacity:.0;
+      animation: bubbleRise linear infinite;
+    }
+    @keyframes bubbleRise{
+      0%   { transform: translateY(0) translateX(0) scale(.9); opacity:0; }
+      10%  { opacity:.75; }
+      70%  { opacity:.55; }
+      100% { transform: translateY(-140vh) translateX(70px) scale(1.1); opacity:0; }
+    }
+
+    /* Kelp */
+    .kelp{
+      position:absolute;
+      bottom: 110px;
+      width: 120px;
+      height: 260px;
+      opacity:.28;
+      filter: blur(.2px);
+      animation: kelpSway 5s ease-in-out infinite alternate;
+      transform-origin: bottom center;
+    }
+    .kelp.k2{ left: 10%; animation-duration: 6.2s; opacity:.22; transform: scale(.85); }
+    .kelp.k3{ left: 82%; animation-duration: 7.4s; opacity:.20; transform: scale(.95); }
+    .kelp.k4{ left: 90%; animation-duration: 5.8s; opacity:.18; transform: scale(.75); }
+    @keyframes kelpSway{
+      from { transform: rotate(-2deg) translateY(0); }
+      to   { transform: rotate(3deg) translateY(2px); }
+    }
+
+    /* Sharks (guaranteed visible animation) */
+    .shark{
+      position:absolute;
+      width: 240px;
+      height: 140px;
+      opacity: var(--op, .22);
+      top: var(--top, 20%);
+      left: -320px;
+      filter: drop-shadow(0 10px 24px rgba(0,0,0,.45));
+      mix-blend-mode: screen;
+      animation: var(--anim, swimA) var(--dur, 18s) linear infinite;
+      animation-delay: var(--delay, 0s);
+      transform: translate3d(-320px,0,0) scale(var(--scale, 1));
+    }
+
+    /* Different swim paths */
+    @keyframes swimA{
+      0%   { transform: translate3d(-320px, 0, 0) scale(var(--scale,1)); }
+      50%  { transform: translate3d(calc(100vw + 320px), 18px, 0) scale(var(--scale,1)); }
+      100% { transform: translate3d(calc(100vw + 320px), 18px, 0) scale(var(--scale,1)); }
+    }
+    @keyframes swimB{
+      0%   { transform: translate3d(-320px, 10px, 0) scale(var(--scale,1)) rotate(-1deg); }
+      35%  { transform: translate3d(40vw, -8px, 0) scale(var(--scale,1)) rotate(1deg); }
+      70%  { transform: translate3d(85vw, 16px, 0) scale(var(--scale,1)) rotate(-1deg); }
+      100% { transform: translate3d(calc(100vw + 320px), 6px, 0) scale(var(--scale,1)) rotate(0deg); }
+    }
+    @keyframes swimC{
+      0%   { transform: translate3d(calc(100vw + 320px), 0, 0) scaleX(-1) scale(var(--scale,1)); }
+      50%  { transform: translate3d(-320px, 22px, 0) scaleX(-1) scale(var(--scale,1)); }
+      100% { transform: translate3d(-320px, 22px, 0) scaleX(-1) scale(var(--scale,1)); }
+    }
+    @keyframes swimD{
+      0%   { transform: translate3d(calc(100vw + 320px), 8px, 0) scaleX(-1) scale(var(--scale,1)) rotate(1deg); }
+      40%  { transform: translate3d(60vw, -10px, 0) scaleX(-1) scale(var(--scale,1)) rotate(-1deg); }
+      80%  { transform: translate3d(10vw, 18px, 0) scaleX(-1) scale(var(--scale,1)) rotate(1deg); }
+      100% { transform: translate3d(-320px, 8px, 0) scaleX(-1) scale(var(--scale,1)) rotate(0deg); }
+    }
+
+    /* UI */
+    .shell{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding: 56px 18px 150px;
+      position:relative;
+      z-index: 5;
+    }
+
+    .topbar{
+      width:min(980px, 100%);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom: 18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      user-select:none;
+    }
+    .logo{
+      width:48px;
+      height:48px;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 28% 30%, rgba(255,255,255,.30), transparent 55%),
+        linear-gradient(135deg, rgba(51,214,255,.98), rgba(65,255,181,.78));
+      box-shadow: 0 18px 40px rgba(0,0,0,.50);
+      border: 1px solid rgba(255,255,255,.12);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo::after{
+      content:"";
+      position:absolute;
+      inset:-50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.45), transparent 55%);
+      transform: rotate(25deg);
+      animation: shimmer 2.6s ease-in-out infinite;
+      opacity:.75;
+    }
+    @keyframes shimmer{
+      0%{ transform: translateX(-18px) rotate(25deg); opacity:.25;}
+      50%{ transform: translateX(22px) rotate(25deg); opacity:.95;}
+      100%{ transform: translateX(-18px) rotate(25deg); opacity:.25;}
+    }
+
+    .brand h1{ margin:0; font-size: 18px; font-weight:900; }
+    .brand p{ margin:2px 0 0; color: var(--muted); font-size: 13px; }
+
+    .card{
+      width:min(980px, 100%);
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      padding: 18px;
+      background: linear-gradient(180deg, var(--cardA), var(--cardB));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      animation: floaty 6.2s ease-in-out infinite;
+    }
+    @keyframes floaty{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-10px); }
+    }
+    @media (max-width: 900px){ .card{ grid-template-columns: 1fr; } }
+
+    .panel{
+      border-radius: calc(var(--radius) - 8px);
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+    }
+    .hero h2{ margin:0 0 10px 0; font-size: 30px; font-weight: 950; }
+    .hero p{ margin:0; color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 54ch; }
+
+    .tagrow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.07);
+      font-size: 12px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 26px rgba(51,214,255,.45);
+    }
+
+    .form h3{ margin:0 0 10px; font-size: 16px; letter-spacing:.2px; }
+
+    .field{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+    .label{ font-size: 12px; color: rgba(234,246,255,.74); }
+    .input{
+      width:100%; padding: 12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .input:focus{
+      border-color: rgba(51,214,255,.75);
+      box-shadow: 0 0 0 4px rgba(51,214,255,.12);
+    }
+
+    .row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; flex-wrap:wrap; }
+
+    .btn{
+      border:0; cursor:pointer;
+      padding: 12px 14px;
+      border-radius:12px;
+      font-weight: 900;
+      letter-spacing:.2px;
+      text-decoration:none;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      min-width: 170px;
+      position:relative; overflow:hidden;
+      transition: transform .05s ease, filter .15s ease;
+      user-select:none;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{
+      background: linear-gradient(135deg, rgba(51,214,255,.98), rgba(65,255,181,.90));
+      color:#021a24;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+    }
+    .btn-primary::after{
+      content:"";
+      position:absolute; inset:-55%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.50), transparent 55%);
+      animation: btnshine 2.4s ease-in-out infinite;
+      opacity:.30;
+      transform: translateX(-60px);
+    }
+    @keyframes btnshine{
+      0%{ transform: translateX(-70px); }
+      50%{ transform: translateX(90px); }
+      100%{ transform: translateX(-70px); }
+    }
+    .btn-ghost{
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.18);
+      color: var(--text);
+    }
+    .btn:hover{ filter: brightness(1.10); }
+
+    #loginResult{
+      display:block;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--danger);
+      min-height: 18px;
+    }
+
+    .footer{
+      width:min(980px, 100%);
+      margin-top: 14px;
+      color: rgba(234,246,255,.55);
+      font-size: 12px;
+      text-align:center;
+      z-index: 5;
+    }
+
+    /* Waves */
+    .waves{
+      position:absolute;
+      left:0; right:0; bottom:-1px;
+      height: 230px;
+      pointer-events:none;
+      z-index: 2;
+      filter: drop-shadow(0 -16px 40px rgba(0,0,0,.60));
+      opacity: .98;
+    }
+    .wave{
+      position:absolute;
+      left:-12%;
+      right:-12%;
+      bottom:0;
+      height: 170px;
+      background-repeat: repeat-x;
+      animation: waveMove linear infinite;
+    }
+    .wave.w1{
+      opacity:.80;
+      background-size: 950px 170px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 950 170'%3E%3Cpath d='M0 88 C 150 44, 290 134, 440 88 C 590 42, 730 134, 880 88 C 910 82, 930 82, 950 88 L950 170 L0 170 Z' fill='%23065f8a'/%3E%3C/svg%3E");
+      animation-duration: 14s;
+    }
+    .wave.w2{
+      bottom: 26px;
+      opacity:.52;
+      background-size: 1200px 170px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 170'%3E%3Cpath d='M0 98 C 200 60, 380 150, 580 98 C 780 46, 960 150, 1160 98 C 1180 94, 1190 94, 1200 98 L1200 170 L0 170 Z' fill='%23032a45'/%3E%3C/svg%3E");
+      animation-duration: 23s;
+      animation-direction: reverse;
+    }
+    .wave.w3{
+      bottom: 52px;
+      opacity:.36;
+      background-size: 1400px 170px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1400 170'%3E%3Cpath d='M0 114 C 240 92, 470 160, 720 114 C 970 68, 1210 160, 1390 114 C 1395 112, 1398 112, 1400 114 L1400 170 L0 170 Z' fill='%23010a18'/%3E%3C/svg%3E");
+      animation-duration: 32s;
+    }
+    @keyframes waveMove{
+      from { transform: translateX(0); }
+      to   { transform: translateX(-22%); }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .rays, .caustics, .particles, .bubble, .wave, .shark, .kelp, .card, .logo::after, .btn-primary::after { animation: none !important; }
+    }
+  </style>
 </head>
+
 <body>
+  <!-- Ocean scene -->
+  <div class="ocean" aria-hidden="true">
+    <div class="rays"></div>
+    <div class="caustics"></div>
+    <div class="glow"></div>
+    <div class="particles"></div>
 
-<h1 id="title">Login Page</h1>
+    <!-- Sharks (multiple, different animations) -->
+    <svg class="shark" style="--top: 12%; --dur: 14s; --delay:-2s; --scale: 1.10; --op:.26; --anim: swimB;" viewBox="0 0 220 120">
+      <path fill="rgba(255,255,255,.98)" d="M10,70 C40,55 65,50 92,52 C120,54 150,45 170,32
+        C182,24 198,22 210,26 C196,35 189,44 186,52
+        C200,55 212,62 218,70 C202,67 187,66 172,69
+        C155,72 139,80 118,82 C90,84 62,82 40,76
+        C30,73 20,72 10,70 Z"/>
+      <path fill="rgba(255,255,255,.98)" d="M120,55 L138,38 L132,60 Z"/>
+    </svg>
 
-<div id="loginDiv">
-	<span id="inner-title">Gimme Dat Info</span>
-	<input type="text" id="loginName" placeholder="Username" /><br />
-	<input type="password" id="loginPassword" placeholder="Password"/><br />
-	<button type="button" class="buttons" onclick="doLogin();">
-  Login
-</button>
+    <svg class="shark" style="--top: 26%; --dur: 18s; --delay:-10s; --scale: .90; --op:.20; --anim: swimA;" viewBox="0 0 220 120">
+      <path fill="rgba(255,255,255,.98)" d="M10,70 C40,55 65,50 92,52 C120,54 150,45 170,32
+        C182,24 198,22 210,26 C196,35 189,44 186,52
+        C200,55 212,62 218,70 C202,67 187,66 172,69
+        C155,72 139,80 118,82 C90,84 62,82 40,76
+        C30,73 20,72 10,70 Z"/>
+      <path fill="rgba(255,255,255,.98)" d="M120,55 L138,38 L132,60 Z"/>
+    </svg>
 
-<a href="registerPage.html"
-   class="buttons"
-   style="text-decoration:none; display:inline-block; margin-left:10px;">
-  Register
-</a>
+    <svg class="shark" style="--top: 42%; --dur: 22s; --delay:-16s; --scale: .72; --op:.16; --anim: swimC;" viewBox="0 0 220 120">
+      <path fill="rgba(255,255,255,.98)" d="M10,70 C40,55 65,50 92,52 C120,54 150,45 170,32
+        C182,24 198,22 210,26 C196,35 189,44 186,52
+        C200,55 212,62 218,70 C202,67 187,66 172,69
+        C155,72 139,80 118,82 C90,84 62,82 40,76
+        C30,73 20,72 10,70 Z"/>
+      <path fill="rgba(255,255,255,.98)" d="M120,55 L138,38 L132,60 Z"/>
+    </svg>
 
-<br /><br />
-<span id="loginResult"></span>
-	<span id="loginResult"></span>
-</div>
+    <svg class="shark" style="--top: 60%; --dur: 28s; --delay:-21s; --scale: .60; --op:.14; --anim: swimD;" viewBox="0 0 220 120">
+      <path fill="rgba(255,255,255,.98)" d="M10,70 C40,55 65,50 92,52 C120,54 150,45 170,32
+        C182,24 198,22 210,26 C196,35 189,44 186,52
+        C200,55 212,62 218,70 C202,67 187,66 172,69
+        C155,72 139,80 118,82 C90,84 62,82 40,76
+        C30,73 20,72 10,70 Z"/>
+      <path fill="rgba(255,255,255,.98)" d="M120,55 L138,38 L132,60 Z"/>
+    </svg>
 
+    <!-- Kelp SVGs -->
+    <svg class="kelp k2" viewBox="0 0 120 260" style="left:6%;">
+      <path d="M60 260 C52 210, 78 180, 58 130 C42 90, 70 70, 52 30" fill="none" stroke="rgba(65,255,181,.70)" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+      <path d="M70 260 C74 200, 42 170, 68 120 C88 80, 58 60, 74 22" fill="none" stroke="rgba(51,214,255,.55)" stroke-width="7" stroke-linecap="round" opacity=".45"/>
+    </svg>
+
+    <svg class="kelp k3" viewBox="0 0 120 260">
+      <path d="M60 260 C50 210, 80 185, 56 135 C40 95, 72 70, 54 30" fill="none" stroke="rgba(65,255,181,.60)" stroke-width="9" stroke-linecap="round" opacity=".50"/>
+      <path d="M72 260 C76 205, 44 175, 70 125 C92 85, 62 64, 76 26" fill="none" stroke="rgba(51,214,255,.50)" stroke-width="6" stroke-linecap="round" opacity=".40"/>
+    </svg>
+
+    <svg class="kelp k4" viewBox="0 0 120 260">
+      <path d="M60 260 C55 210, 78 190, 60 140 C46 100, 70 78, 56 40" fill="none" stroke="rgba(65,255,181,.55)" stroke-width="8" stroke-linecap="round" opacity=".45"/>
+    </svg>
+
+    <!-- Bubbles (more) -->
+    <!-- (sizes and durations vary so it looks alive) -->
+    <span class="bubble" style="left:5%;  width:7px;  height:7px;  animation-duration:9s;  animation-delay:-1s;"></span>
+    <span class="bubble" style="left:10%; width:12px; height:12px; animation-duration:14s; animation-delay:-7s;"></span>
+    <span class="bubble" style="left:14%; width:6px;  height:6px;  animation-duration:8s;  animation-delay:-3s;"></span>
+    <span class="bubble" style="left:20%; width:16px; height:16px; animation-duration:18s; animation-delay:-10s;"></span>
+    <span class="bubble" style="left:28%; width:9px;  height:9px;  animation-duration:11s; animation-delay:-4s;"></span>
+    <span class="bubble" style="left:34%; width:7px;  height:7px;  animation-duration:9.5s;animation-delay:-6s;"></span>
+    <span class="bubble" style="left:41%; width:14px; height:14px; animation-duration:16s; animation-delay:-12s;"></span>
+    <span class="bubble" style="left:48%; width:8px;  height:8px;  animation-duration:10s; animation-delay:-2s;"></span>
+    <span class="bubble" style="left:55%; width:6px;  height:6px;  animation-duration:8.5s;animation-delay:-5s;"></span>
+    <span class="bubble" style="left:63%; width:15px; height:15px; animation-duration:19s; animation-delay:-14s;"></span>
+    <span class="bubble" style="left:70%; width:10px; height:10px; animation-duration:12s; animation-delay:-8s;"></span>
+    <span class="bubble" style="left:78%; width:7px;  height:7px;  animation-duration:9s;  animation-delay:-3s;"></span>
+    <span class="bubble" style="left:84%; width:13px; height:13px; animation-duration:15s; animation-delay:-9s;"></span>
+    <span class="bubble" style="left:91%; width:9px;  height:9px;  animation-duration:11s; animation-delay:-6s;"></span>
+
+    <!-- Waves -->
+    <div class="waves">
+      <div class="wave w3"></div>
+      <div class="wave w2"></div>
+      <div class="wave w1"></div>
+    </div>
+  </div>
+
+  <!-- UI -->
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Contact Manager</h1>
+          <p>Deep Sea Theme • Sharks cruising behind you 🦈</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <section class="panel hero">
+        <h2>Welcome back</h2>
+        <p>
+          Dive deep and manage your contacts.
+        </p>
+
+
+      </section>
+
+      <section class="panel form">
+        <h3>Sign in</h3>
+
+        <div class="field">
+          <div class="label">Username</div>
+          <input class="input" type="text" id="loginName" placeholder="Enter your username" autocomplete="username" />
+        </div>
+
+        <div class="field">
+          <div class="label">Password</div>
+          <input class="input" type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" />
+        </div>
+
+        <div class="row">
+          <button type="button" class="btn btn-primary" onclick="doLogin();">
+            <span aria-hidden="true">🦈</span>
+            Login
+          </button>
+
+          <a href="registerPage.html" class="btn btn-ghost">
+            Create account
+          </a>
+        </div>
+
+        <span id="loginResult"></span>
+      </section>
+    </div>
+
+    <div class="footer">COP 4331 • Contact Manager • Deep Sea Theme</div>
+  </div>
 </body>
 </html>
