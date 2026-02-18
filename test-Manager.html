@@ -1,0 +1,78 @@
+<!-- 
+    Author: Vien Tran
+    CoPilot: Google Gemini
+    Purpose: Contact Webpage for COP4331 project.
+    Desc.: A webpage that allows a logged-in user to search, access, and edit contacts.
+
+    Notes: All comments below are for my personal use for future referencing and are excess.
+        - They are from referencing videos, code, and AI explanations.
+    -->
+
+<!DOCTYPE html> <!-- Declares the HTML type -->
+<html lang = "en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Manager Page</title>
+
+    <!-- Design and Style Sheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/contactPage.css">
+    <!-- Functionality -->
+     <script type="text/javascript" src="js/code.js"></script>
+     <script type="text/javascript" src="js/md5.js"></script>
+
+</head>
+
+<body>
+    <!-- Management Bar -->
+    <nav class="navbar">
+        <div class="namePlate"><span id = "namePlateText"></span></div>
+        <div class="nav-links">
+
+            <!-- Logout Button -->
+            <button class="logout-btn" onclick="doLogout()">Logout</button> 
+        </div>
+    </nav>
+
+    <!-- Search and Contact Control Section -->
+    <div class="search-wrapper">
+        <label for="search-bar">Search Your Contacts</label>
+        
+        <!-- Search Bar -->
+        <input type="search" id ="searchText" placeholder="Search Contacts">
+    </div>
+
+    <!-- Contact Cards -->
+    <div id="contactCardsContainer" class = "contact-cards">
+        <template id="contactCardTemplate" data-contact-card-template >
+            <article class = "card">
+                <h3 class="firstName">John <span class = "lastName">Doe</span></h3>
+                <div class="Email"> [Email] </div>
+                <div class="Phone">[Phone]</div>
+            </article>
+        </template>
+    </div>
+
+
+    <!-- Footer: Information Center -->
+    <footer>
+        <p>COP4331 - Team 27 &copy; Spring 2026 Contact Page</p>
+    </footer>
+
+    <script>
+        // 1. First, pull the data from the cookies
+        readCookie(); 
+
+        // 2. Insert into the Navbar (Small version)
+        document.getElementById("namePlateText").innerText = `${firstName} ${lastName}`;
+
+        // 3. Insert into the Welcome Header (Big version)
+        //document.getElementById("welcomeName").innerText = firstName;
+    </script>
+
+        
+</body>
+</html>
