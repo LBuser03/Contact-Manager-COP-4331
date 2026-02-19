@@ -1,4 +1,13 @@
 <?php
+	header("Access-Control-Allow-Origin: *");
+	header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+	header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+	// If the request is an OPTIONS request (the "preflight" check), stop here.
+	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+		exit;
+	}
+
 	$inData = getRequestInfo();
 	
 	$searchResults = array();
@@ -13,7 +22,7 @@
 	{
 		$stmt = $conn->prepare("select FirstName, LastName, Email, Phone FROM Contacts where (FirstName like ? OR LastName LIKE ?) and UserID=?");
 		$contactName = "%" . $inData["search"] . "%";
-		$stmt->bind_param("ssi", $contactName, $contactName, $inData["UserID"]);
+		$stmt->bind_param("ssi", $contactName, $contactName, $inData["userId"]);
 		$stmt->execute();
 		
 		$result = $stmt->get_result();
