@@ -20,13 +20,13 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.logo {
+.namePlate {
     font-size: 1.5rem;
     font-weight: 700;
     color: #ffffffdc;
 }
 
-.logo span {
+.namePlate span {
     color: #1e293b;
 }
 
@@ -50,66 +50,112 @@ body {
     font-weight: 500;
 }
 
-/* ========= Contact Management UX Section - Main Part ===============*/
-.contactManagement {
-    height: 80vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
+/* ========= Search Bar Design ===============*/
 .search-wrapper {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-}
-
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-p {
-    color: #64748b;
-    margin-bottom: 2rem;
-}
-
-.search-bar {
-    position: relative;
+    margin: 40px auto; /* 40px top/bottom gives the navbar breathing room */
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Stacks label on top of input */
+    align-items: center;    /* Centers items horizontally */
+    gap:10px;             /* Space between label and search bar */
 }
 
-.search-bar i {
-    position: absolute;
-    left: 20px;
-    color: #94a3b8;
-    font-size: 1.2rem;
+.search-wrapper label {
+    font-family: 'Trade Winds', cursive;
+    color: #FFFFFF;
+    font-size: 24px;
 }
 
-.search-bar input {
-    width: 100%;
-    padding: 1.2rem 1.2rem 1.2rem 3.5rem;
-    font-size: 1.1rem;
-    border: 2px solid transparent;
-    border-radius: 50px;
-    background: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    outline: none;
-    transition: all 0.3s;
+#searchText {
+    /* Shape & Size */
+    width: 100%;           /* Fills the container */
+    max-width: 400px;      /* Prevents it from getting too huge on desktop */
+    padding: 12px 20px;    /* Adds space inside: 12px top/bottom, 20px sides */
+    border-radius: 50px;   /* Makes it a pill shape */
+    
+    /* Visuals */
+    border: 2px solid #065e91; /* Matches your blue theme */
+    background-color: #ffffff;
+    font-size: 18px;
+    outline: none;         /* Removes the default browser "glow" */
+    
+    /* Smoothness */
+    transition: all 0.3s ease; /* Makes the focus effect smooth */
+
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    backdrop-filter: blur(5px);                 /* Blurs the blue gradient behind the bar */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
 }
 
-.search-bar input:focus {
-    border-color: #059669;
-    box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.2);
+#searchText:focus {
+    border-color: #7cb9dc;
+    box-shadow: 0 0 8px rgba(165, 179, 165, 0.6);
 }
 
-.status-text {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-    color: #94a3b8;
+#searchText::placeholder {
+    color: rgba(255, 255, 255, 0.7);            /* Makes the placeholder text lighter white */
+}
+
+/* ========= Inputs ===========*/
+input[type="text"], input[type="password"], input[type="search"] {
+    border-radius: 25px;
+    text-align: center;
+    width: 80%;
+    margin-left: 10%;
+    margin-bottom: 2%;
+    font-family: 'Geo', sans-serif;
+    
+    /* --- NEW STYLING --- */
+    border: 2px solid #065e91; 
+    padding: 10px 0;           
+    outline: none;             
+    transition: 0.3s;          
+}
+
+/* ========= Contact Cards ===============*/
+.contact-cards {
+    display: grid;
+    /* Changed 150px to 250px for better readability */
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    /* gap: [row-gap] [column-gap] */
+    gap: 20px 5px; /* 20px space between rows, but only 5px between columns */
+    padding: 20px;
+    clear: both; /* Ensures it starts below the search section */
+    margin-top: 30px;
+    width: 90%;
+    margin: 30px auto;
+}
+
+.card {
+    background-color: #FAE8B4; /* Matches your login box */
+    border-radius: 15px;      /* Rounded corners */
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s; /* Pop effect on hover */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    margin: 0;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Lift the card slightly */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.card > .firstName {
+    font-family: 'Trade Winds', cursive;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: #0e2b9d;
+}
+
+.card > .info {
+    font-family: 'Trade Winds', cursive;
+    color: #0e989d;
+}
+
+.hide{
+    display: none;
 }
 
 /* Foot Design */

@@ -1,4 +1,18 @@
 <?php
+// 1. Allow the Origin (Essential for Live Preview)
+header("Access-Control-Allow-Origin: *");
+
+// 2. Allow the Methods (POST is what your search uses)
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+
+// 3. Allow the Content-Type (Essential for JSON payloads)
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+// 4. Handle the "Preflight" Request (The bouncer)
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
     $inData = getRequestInfo();
 
     $firstName = $inData["firstName"];

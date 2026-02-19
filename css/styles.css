@@ -1,4 +1,4 @@
-body 
+  body 
 {
     background: linear-gradient(180deg,#7cb9dcf8 0%, #065e91f8 100%);
     min-height: 100vh;
@@ -47,17 +47,52 @@ body
     background-color: #b2b2b2;
 }
 
-.buttons
+.pageButtons
 {
-    font-size: 20px;
-    border-radius: 30px;
-    width: 50%;
-    margin-left: 25%;
-    font-family: 'Trade Winds', cursive;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
 }
 
-.buttons:hover{
-    background-color: #016ff5c5;
+.buttons, .registerButton
+{
+    /* Block size */
+    width: 150px;
+    height: 35px;
+
+    /* Alignment */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;;
+
+    text-align: center;
+
+    /* Block Design */
+    border-radius: 30px;
+    
+    /* Text Design */
+    font-size: 18px;
+    font-family: 'Trade Winds', cursive;
+    text-decoration: none;
+}
+
+/* Specific colors to help you see them */
+.buttons {
+    background-color: #20342d;
+    color: white;
+    border: none;
+}
+
+.registerButton {
+    background-color: #5084c8;
+    color: #FFFFFF;
+}
+
+.buttons:hover, .registerButton:hover{
+    background-color: #2f68aec5;
     color: #FFFFFF;
     opacity: 70%;
 }

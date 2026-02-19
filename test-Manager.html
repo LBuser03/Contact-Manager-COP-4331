@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="css/contactPage.css">
     <!-- Functionality -->
      <script type="text/javascript" src="js/code.js"></script>
+     <script type="text/javascript" src="js/md5.js"></script>
 
 </head>
 
@@ -45,13 +46,13 @@
     </div>
 
     <!-- Contact Cards -->
-    <div class = "contact-cards">
-        <template>
-        <article class = "card">
-            <h3 class="firstName">John <span class = "lastName">Doe</span></h3>
-            <div class="info"> [Email] </div>
-            <div class="phoneNumber">[Phone]</div>
-        </article>
+    <div id="contactCardsContainer" class = "contact-cards">
+        <template id="contactCardTemplate" data-contact-card-template >
+            <article class = "card">
+                <h3 class="firstName">John <span class = "lastName">Doe</span></h3>
+                <div class="Email"> [Email] </div>
+                <div class="Phone">[Phone]</div>
+            </article>
         </template>
     </div>
 
