@@ -198,16 +198,24 @@ function requireLogin()
 
 function addContact()
 {
-  let firstName = document.getElementById("addFirstName").value;
-  let lastName = document.getElementById("addLastName").value;
-  let phone = document.getElementById("addPhone").value;
-  let email = document.getElementById("addEmail").value;
+  const out = document.getElementById("addContactResult");
+  if (out) out.innerHTML = "";
 
-  document.getElementById("addContactResult").innerHTML = "";
+  if (!readCookie())
+  {
+    if (out) out.innerHTML = "Session expired. Please log in again.";
+    window.location.href = "index.html";
+    return;
+  }
+
+  const contactFirstName = document.getElementById("addFirstName").value;
+  const contactLastName = document.getElementById("addLastName").value;
+  const phone = document.getElementById("addPhone").value;
+  const email = document.getElementById("addEmail").value;
 
   let jsonPayload = JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
+        firstName: contactFirstName,
+        lastName: contactLastName,
         phone: phone,
         email: email,
         userId: userId
@@ -224,14 +232,14 @@ function addContact()
         {
             if (this.readyState == 4 && this.status == 200) 
             {
-                document.getElementById("addContactResult").innerHTML = "Contact has been added";
+                if (out) out.innerHTML = "Contact has been added";
             }
         };
         xhr.send(jsonPayload);
     }
     catch(err)
     {
-        document.getElementById("addContactResult").innerHTML = err.message;
+        if (out) out.innerHTML = err.message;
     }
 }
 
