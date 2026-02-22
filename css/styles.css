@@ -47,6 +47,13 @@
     background-color: #b2b2b2;
 }
 
+.logo-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .pageButtons
 {
     display: flex;
