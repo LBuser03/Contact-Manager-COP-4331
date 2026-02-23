@@ -159,7 +159,7 @@ body {
 .delete-btn:hover { background: #ff6b6b; color: white; border-color: #ff6b6b; }
 
 /* ========= Inputs ===========*/
-input[type="text"], input[type="password"], input[type="search"] {
+input[type="text"], input[type="password"], input[type="search"], input[type="email"] {
     border-radius: 25px;
     text-align: center;
     width: 80%;
