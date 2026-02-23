@@ -369,15 +369,6 @@ function closeAddModal() {
     document.getElementById("addContactResult").innerHTML = "";
 }
 
-window.onload = function() {
-    const path = window.location.pathname;
-    const page = path.split("/").pop();
-
-    if (page === "contactManager.html") {
-        readCookie();
-        searchContacts();
-    }
-};
 
 // Update your existing addContact to close the modal on success
 // After document.getElementById("addContactResult").innerHTML = "Contact has been added";
