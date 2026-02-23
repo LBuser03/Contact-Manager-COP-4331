@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 	} 
 	else
 	{
-		$stmt = $conn->prepare("select FirstName, LastName, Email, Phone FROM Contacts where (FirstName like ? OR LastName LIKE ?) and UserID=?");
+		$stmt = $conn->prepare("select ID, FirstName, LastName, Email, Phone FROM Contacts where (FirstName like ? OR LastName LIKE ?) and UserID=?");
 		$contactName = "%" . $inData["search"] . "%";
 		$stmt->bind_param("ssi", $contactName, $contactName, $inData["userId"]);
 		$stmt->execute();
@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 		{
 			$searchCount++;
 			$searchResults[] = array(
+				"id" => (int)$row["ID"],
 				"first" => $row["FirstName"],
 				"last" => $row["LastName"],
 				"email" => $row["Email"],
@@ -81,4 +82,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 	}
 	
 ?>
-
