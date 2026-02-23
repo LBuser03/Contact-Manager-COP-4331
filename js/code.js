@@ -1,4 +1,5 @@
-const urlBase = 'http://labfor4331.xyz/LAMPAPI';
+const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const urlBase = isLocalHost ? `${window.location.origin}/LAMPAPI` : 'http://labfor4331.xyz/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
