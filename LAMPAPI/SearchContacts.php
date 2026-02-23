@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 		{
 			$searchCount++;
 			$searchResults[] = array(
+				"id" => (int)$row["ID"],
 				"first" => $row["FirstName"],
 				"last" => $row["LastName"],
 				"email" => $row["Email"],
