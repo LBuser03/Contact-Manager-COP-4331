@@ -287,7 +287,6 @@ function searchContacts() {
             json.results.forEach(contact => {
                 const card = contactCardTemplate.content.cloneNode(true);
 
-                // Ensure these match your API response keys (e.g., contact.firstName vs contact.first)
                 if (card.querySelector(".firstName")) card.querySelector(".firstName").innerText = contact.firstName || contact.first || "";
                 if (card.querySelector(".lastName")) card.querySelector(".lastName").innerText = contact.lastName || contact.last || "";
                 if (card.querySelector(".Email")) card.querySelector(".Email").innerText = contact.email || "";
