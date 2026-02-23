@@ -208,8 +208,10 @@ function addContact()
     return;
   }
 
-  const contactFirstName = document.getElementById("addFirstName").value;
-  const contactLastName = document.getElementById("addLastName").value;
+  const firstNameInput = document.getElementById("addFirstName");
+  const lastNameInput = document.getElementById("addLastName");
+  const contactFirstName = firstNameInput.value.trim();
+  const contactLastName = lastNameInput.value.trim();
   const phoneInput = document.getElementById("addPhone");
   const emailInput = document.getElementById("addEmail");
   const phone = phoneInput.value.trim();
@@ -247,6 +249,12 @@ function addContact()
             if (this.readyState == 4 && this.status == 200) 
             {
                 if (out) out.innerHTML = "Contact has been added";
+                firstNameInput.value = "";
+                lastNameInput.value = "";
+                phoneInput.value = "";
+                emailInput.value = "";
+                searchContacts();
+                closeAddModal();
             }
         };
         xhr.send(jsonPayload);
