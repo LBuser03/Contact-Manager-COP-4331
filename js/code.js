@@ -198,16 +198,38 @@ function requireLogin()
 
 function addContact()
 {
-  let firstName = document.getElementById("addFirstName").value;
-  let lastName = document.getElementById("addLastName").value;
-  let phone = document.getElementById("addPhone").value;
-  let email = document.getElementById("addEmail").value;
+  const out = document.getElementById("addContactResult");
+  if (out) out.innerHTML = "";
 
-  document.getElementById("addContactResult").innerHTML = "";
+  if (!readCookie())
+  {
+    if (out) out.innerHTML = "Session expired. Please log in again.";
+    window.location.href = "index.html";
+    return;
+  }
+
+  const contactFirstName = document.getElementById("addFirstName").value;
+  const contactLastName = document.getElementById("addLastName").value;
+  const phoneInput = document.getElementById("addPhone");
+  const emailInput = document.getElementById("addEmail");
+  const phone = phoneInput.value.trim();
+  const email = emailInput.value.trim();
+
+  if (!phoneInput.checkValidity())
+  {
+    phoneInput.reportValidity();
+    return;
+  }
+
+  if (!emailInput.checkValidity())
+  {
+    emailInput.reportValidity();
+    return;
+  }
 
   let jsonPayload = JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
+        firstName: contactFirstName,
+        lastName: contactLastName,
         phone: phone,
         email: email,
         userId: userId
@@ -224,14 +246,14 @@ function addContact()
         {
             if (this.readyState == 4 && this.status == 200) 
             {
-                document.getElementById("addContactResult").innerHTML = "Contact has been added";
+                if (out) out.innerHTML = "Contact has been added";
             }
         };
         xhr.send(jsonPayload);
     }
     catch(err)
     {
-        document.getElementById("addContactResult").innerHTML = err.message;
+        if (out) out.innerHTML = err.message;
     }
 }
 
@@ -240,45 +262,36 @@ function addContact()
     Takes a text input that should be correlated to a name.
     Returns array of JSON object listing all relevant contacts (email, #, fName, lName)
 */
-function searchContacts()
-{
-  const searchInput = document.getElementById("searchText");
+function searchContacts() {
+    // 1. Pull the latest userId from the cookie
+    readCookie(); 
 
-  // If the input doesn't exist, exit early before we try to access .value
-  if (!searchInput) {
-      console.error("Search input field not found in HTML!");
-      return; 
-  }
+    const searchInput = document.getElementById("searchText");
+    if (!searchInput) return;
 
-  let srch = searchInput.value;
+    let srch = searchInput.value;
+    const contactContainer = document.getElementById("contactCardsContainer");
+    const contactCardTemplate = document.getElementById("contactCardTemplate");
 
-  const contactContainer = document.getElementById("contactCardsContainer");
-  const contactCardTemplate = document.getElementById("contactCardTemplate");
+    if (!contactContainer || !contactCardTemplate) return;
 
-  // Verify the container and template exist before proceeding
-  if (!contactContainer || !contactCardTemplate) {
-    console.error("Missing required HTML elements: container or template.");
-    return;
-  }
+    // 2. Stop if the user isn't logged in
+    if (!userId || userId < 1) {
+        console.error("No valid user session found.");
+        return;
+    }
 
-  if (!userId || userId < 1)
-  {
-    console.error("No valid user.");
-    return;
-  }
+    contactContainer.innerHTML = '<p style="color:white; grid-column: 1/-1; text-align:center;">Searching...</p>';
 
-  contactContainer.innerHTML = '<p style="color:white; grid-column: 1/-1; text-align:center;">Searching...</p>';
+    let jsonPayload = JSON.stringify({ search: srch, userId: userId });
+    const url = `${urlBase}/SearchContacts.${extension}`;
 
-  let jsonPayload = JSON.stringify({ search: srch, userId: userId });
-  const url = `${urlBase}/SearchContacts.${extension}`; // Access API for searching the relevant database and tables.
-
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-  xhr.onreadystatechange = function () {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    
+    xhr.onreadystatechange = function () {
         if (xhr.readyState !== 4) return;
-
-        // 2. Clear the "Searching..." message
         contactContainer.innerHTML = "";
 
         if (xhr.status !== 200) {
@@ -288,31 +301,25 @@ function searchContacts()
 
         try {
             const json = JSON.parse(xhr.responseText);
-
             if (!json.results || json.results.length === 0) {
                 contactContainer.innerHTML = `<p style="color:white; grid-column: 1/-1; text-align:center;">No contacts found.</p>`;
                 return;
             }
 
-            // 3. Loop through results and clone the template
             json.results.forEach(contact => {
                 const card = contactCardTemplate.content.cloneNode(true);
 
-                // Use optional chaining (?.) to prevent crashes if a class is missing in HTML
-                if (card.querySelector(".firstName")) card.querySelector(".firstName").innerText = contact.first || "";
-                if (card.querySelector(".lastName")) card.querySelector(".lastName").innerText = contact.last || "";
+                if (card.querySelector(".firstName")) card.querySelector(".firstName").innerText = contact.firstName || contact.first || "";
+                if (card.querySelector(".lastName")) card.querySelector(".lastName").innerText = contact.lastName || contact.last || "";
                 if (card.querySelector(".Email")) card.querySelector(".Email").innerText = contact.email || "";
                 if (card.querySelector(".Phone")) card.querySelector(".Phone").innerText = contact.phone || "";
 
                 contactContainer.appendChild(card);
             });
-
         } catch (e) {
-            console.error("Parsing Error:", e);
-            contactContainer.innerHTML = `<p style="color:red; grid-column: 1/-1;">Server error. Try again.</p>`;
+            contactContainer.innerHTML = `<p style="color:red; grid-column: 1/-1;">Server error.</p>`;
         }
     };
-
     xhr.send(jsonPayload);
 }
 
@@ -383,6 +390,16 @@ function closeAddModal() {
     // Optional: Clear the result message when closing
     document.getElementById("addContactResult").innerHTML = "";
 }
+
+window.onload = function() {
+    const path = window.location.pathname;
+    const page = path.split("/").pop();
+
+    if (page === "contactManager.html") {
+        readCookie();
+        searchContacts();
+    }
+};
 
 // Update your existing addContact to close the modal on success
 // After document.getElementById("addContactResult").innerHTML = "Contact has been added";

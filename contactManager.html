@@ -24,7 +24,7 @@
     <script type="text/javascript" src="js/code.js"></script>
 </head>
 
-<body>
+<body onload="requireLogin()">
 <div class="shell">
     <header class="topbar">
         <div class="brand">
@@ -64,11 +64,11 @@
             </div>
             <div class="field">
                 <span class="label">Phone</span>
-                <input type="text" id="addPhone" class="input" placeholder="Phone">
+                <input type="text" id="addPhone" class="input" placeholder="Phone" inputmode="numeric" maxlength="10" required pattern="\d{10}" title="Phone number must be exactly 10 digits (numbers only).">
             </div>
             <div class="field">
                 <span class="label">Email</span>
-                <input type="text" id="addEmail" class="input" placeholder="Email">
+                <input type="email" id="addEmail" class="input" placeholder="Email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Email must be in the format name@example.com.">
             </div>
 
             <div class="row" style="margin-top: 20px;">
