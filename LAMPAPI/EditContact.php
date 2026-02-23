@@ -15,11 +15,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
     $inData = getRequestInfo();
 
-    $id = $inData["id"];
-    $newFirstName = $inData["firstName"];
-    $newLastName = $inData["lastName"];
-    $newPhone = $inData["phone"];
-    $newEmail = $inData["email"];
+    $id = $inData["id"] ?? 0;
+    $newFirstName = trim($inData["firstName"] ?? "");
+    $newLastName = trim($inData["lastName"] ?? "");
+    $newPhone = trim($inData["phone"] ?? "");
+    $newEmail = trim($inData["email"] ?? "");
+
+    if (!preg_match('/^\d{10}$/', $newPhone))
+    {
+        returnWithError("Phone number must be exactly 10 digits.");
+        exit;
+    }
+
+    if (!preg_match('/^[^@\s]+@[^@\s]+\.[^@\s]+$/', $newEmail))
+    {
+        returnWithError("Email must be in the format name@example.com.");
+        exit;
+    }
 
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "contact_manager");
     

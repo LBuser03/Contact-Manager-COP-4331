@@ -210,8 +210,22 @@ function addContact()
 
   const contactFirstName = document.getElementById("addFirstName").value;
   const contactLastName = document.getElementById("addLastName").value;
-  const phone = document.getElementById("addPhone").value;
-  const email = document.getElementById("addEmail").value;
+  const phoneInput = document.getElementById("addPhone");
+  const emailInput = document.getElementById("addEmail");
+  const phone = phoneInput.value.trim();
+  const email = emailInput.value.trim();
+
+  if (!phoneInput.checkValidity())
+  {
+    phoneInput.reportValidity();
+    return;
+  }
+
+  if (!emailInput.checkValidity())
+  {
+    emailInput.reportValidity();
+    return;
+  }
 
   let jsonPayload = JSON.stringify({
         firstName: contactFirstName,
