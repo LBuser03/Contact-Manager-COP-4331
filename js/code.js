@@ -575,64 +575,6 @@ function searchContacts() {
     xhr.send(jsonPayload);
 }
 
-
-/*
-function searchContacts() {
-    const srch = document.getElementById("searchText")?.value ?? "";
-    const contactContainer = document.getElementById("contactCardsContainer");
-    const contactCardTemplate = document.getElementById("contactCardTemplate");
-
-    if (!contactContainer || !contactCardTemplate) {
-        console.error("HTML elements missing. Check your IDs!");
-        return;
-    }
-
-    // 1. Show the user something is happening
-    contactContainer.innerHTML = '<p style="color:white; text-align:center;">Searching...</p>';
-
-    // 2. This is your EXACT API structure
-    const mockResponse = {
-        "results": [
-            {
-                "first": "Jane",
-                "last": "Doe",
-                "email": "jane@example.com",
-                "phone": "321-555-0199"
-            },
-            {
-                "first": "Gemini",
-                "last": "Test",
-                "email": "gemini@ucf.edu",
-                "phone": "407-555-0123"
-            }
-        ],
-        "error": ""
-    };
-
-    // 3. Simulate the delay of the database
-    setTimeout(() => {
-        contactContainer.innerHTML = ""; // Clear "Searching..."
-
-        if (mockResponse.results.length === 0) {
-            contactContainer.innerHTML = '<p style="color:white;">No results found.</p>';
-            return;
-        }
-
-        mockResponse.results.forEach(contact => {
-            const card = contactCardTemplate.content.cloneNode(true);
-            
-            // Note: These must match the CLASS names in your HTML <template>
-            // and the KEY names in your JSON (contact.first, contact.email, etc.)
-            card.querySelector(".firstName").innerText = contact.first;
-            card.querySelector(".lastName").innerText = contact.last;
-            card.querySelector(".Email").innerText = contact.email;
-            card.querySelector(".Phone").innerText = contact.phone;
-
-            contactContainer.appendChild(card);
-        });
-    }, 400); 
-}
-*/
 function openAddModal() {
     document.getElementById("addModal").classList.remove("hide");
 }
