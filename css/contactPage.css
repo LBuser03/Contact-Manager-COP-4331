@@ -1,274 +1,518 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-}
+/* ============================================================
+   contactPage.css  –  Diver's Manifest  (matches login theme)
+   ============================================================ */
 
+/* ---------- CSS Variables (mirror login page exactly) ---------- */
 :root {
-    /* The core colors from your partner's theme */
-    --deep0: #01050e;
-    --deep1: #021227;
-    --deep2: #032a45;
-    --deep3: #045f8a;
+  --deep0: #01050e;
+  --deep1: #021227;
+  --deep2: #032a45;
+  --deep3: #045f8a;
 
-    --text: #eaf6ff;
-    --muted: rgba(234,246,255,.74);
+  --text:  #eaf6ff;
+  --muted: rgba(234,246,255,.74);
 
-    --accent: #33d6ff;
-    --accent2: #41ffb5;
+  --accent:  #33d6ff;
+  --accent2: #41ffb5;
+  --danger:  #ff6b6b;
 
-    --danger: #ff6b6b;
+  --cardA: rgba(2,16,30,0.62);
+  --cardB: rgba(2,16,30,0.86);
 
-    /* These are vital for the "Glass" look of your panels */
-    --cardA: rgba(2, 16, 30, 0.62);
-    --cardB: rgba(2, 16, 30, 0.86);
-
-    --stroke: rgba(255,255,255,.14);
-    --shadow: 0 28px 90px rgba(0,0,0,.70);
-    --radius: 18px;
+  --stroke: rgba(255,255,255,.14);
+  --shadow: 0 28px 90px rgba(0,0,0,.70);
+  --radius: 18px;
 }
 
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+/* ---------- Body / Background (mirrors login) ---------- */
 body {
-    margin: 0;
-    font-family: 'Ubuntu', sans-serif; /* Partner uses Ubuntu */
-    color: var(--text);
-    background: linear-gradient(180deg, var(--deep2) 0%, var(--deep1) 48%, var(--deep0) 100%);
-    min-height: 100vh;
+  font-family: Ubuntu, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100%;
+
+  background:
+    radial-gradient(1200px 900px at 20% 10%,  rgba(0,200,255,.28)  0%, transparent 58%),
+    radial-gradient(900px  700px at 85% 18%,  rgba(65,255,181,.16) 0%, transparent 58%),
+    radial-gradient(900px  900px at 50% 110%, rgba(0,160,255,.22)  0%, transparent 56%),
+    linear-gradient(180deg, var(--deep2) 0%, var(--deep1) 48%, var(--deep0) 100%);
 }
 
+/* Depth vignette */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 700px at 50%  15%, rgba(255,255,255,.08), transparent 60%),
+    radial-gradient(1300px 900px at 50%  70%, transparent 55%, rgba(0,0,0,.78) 92%),
+    radial-gradient(900px  700px at 50% 110%, rgba(0,0,0,.90), rgba(0,0,0,.95));
+  z-index: 0;
+}
+
+/* ============================================================
+   OCEAN SCENE  (exact copy from login page)
+   ============================================================ */
+.ocean {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Light rays */
+.rays {
+  position: absolute; inset: -20%;
+  opacity: .35;
+  background:
+    linear-gradient(120deg, transparent 0 35%, rgba(255,255,255,.08) 45%, transparent 55%),
+    linear-gradient(110deg, transparent 0 40%, rgba(51,214,255,.08) 50%, transparent 60%),
+    linear-gradient(100deg, transparent 0 42%, rgba(255,255,255,.06) 52%, transparent 62%);
+  filter: blur(1px);
+  mix-blend-mode: screen;
+  animation: raysMove 10s ease-in-out infinite alternate;
+}
+@keyframes raysMove {
+  from { transform: translate3d(-20px,-10px,0) rotate(-2deg); }
+  to   { transform: translate3d( 20px, 14px,0) rotate( 2deg); }
+}
+
+/* Caustics */
+.caustics {
+  position: absolute; inset: -25%;
+  opacity: .40;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.18), transparent 52%),
+    radial-gradient(circle at 60% 55%, rgba(255,255,255,.14), transparent 58%),
+    radial-gradient(circle at 82% 25%, rgba(255,255,255,.12), transparent 58%);
+  filter: blur(2px);
+  mix-blend-mode: soft-light;
+  animation: causticDrift 9s ease-in-out infinite alternate;
+}
+@keyframes causticDrift {
+  from { transform: translate3d(-18px,-14px,0) scale(1.05); }
+  to   { transform: translate3d( 26px, 18px,0) scale(1.10); }
+}
+
+/* Deep glow blobs */
+.glow {
+  position: absolute; inset: 0;
+  opacity: .45;
+  background:
+    radial-gradient(500px 300px at 20% 80%, rgba(51,214,255,.22),  transparent 65%),
+    radial-gradient(520px 340px at 75% 75%, rgba(65,255,181,.18),  transparent 68%),
+    radial-gradient(600px 380px at 50% 60%, rgba(0,170,255,.14),   transparent 70%);
+  filter: blur(2px);
+}
+
+/* Particles */
+.particles {
+  position: absolute; inset: 0;
+  opacity: .35;
+  background-image: radial-gradient(circle, rgba(255,255,255,.09) 0 1px, transparent 2px);
+  background-size: 140px 140px;
+  animation: particlesMove 18s linear infinite;
+}
+@keyframes particlesMove {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-60px); }
+}
+
+/* Bubbles */
+.bubble {
+  position: absolute;
+  bottom: -180px;
+  border-radius: 999px;
+  border: 1px solid rgba(234,246,255,.30);
+  background: rgba(234,246,255,.05);
+  box-shadow: 0 0 26px rgba(51,214,255,.20);
+  opacity: 0;
+  animation: bubbleRise linear infinite;
+}
+@keyframes bubbleRise {
+  0%   { transform: translateY(0)       translateX(0)    scale(.9); opacity: 0; }
+  10%  { opacity: .75; }
+  70%  { opacity: .55; }
+  100% { transform: translateY(-140vh)  translateX(70px) scale(1.1); opacity: 0; }
+}
+
+/* Kelp */
+.kelp {
+  position: absolute;
+  bottom: 110px;
+  width: 120px; height: 260px;
+  opacity: .28;
+  filter: blur(.2px);
+  animation: kelpSway 5s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+.kelp.k2 { animation-duration: 6.2s; opacity: .22; }
+.kelp.k3 { animation-duration: 7.4s; opacity: .20; }
+@keyframes kelpSway {
+  from { transform: rotate(-2deg) translateY(0); }
+  to   { transform: rotate( 3deg) translateY(2px); }
+}
+
+/* Sharks */
+.shark {
+  position: absolute;
+  width: 240px; height: 140px;
+  opacity: var(--op, .22);
+  top: var(--top, 20%);
+  left: -320px;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,.45));
+  mix-blend-mode: screen;
+  animation: var(--anim, swimA) var(--dur, 18s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes swimA {
+  0%   { transform: translate3d(-320px, 0, 0)              scale(var(--scale,1)); }
+  50%  { transform: translate3d(calc(100vw + 320px), 18px, 0) scale(var(--scale,1)); }
+  100% { transform: translate3d(calc(100vw + 320px), 18px, 0) scale(var(--scale,1)); }
+}
+@keyframes swimB {
+  0%   { transform: translate3d(-320px, 10px, 0)               scale(var(--scale,1)) rotate(-1deg); }
+  35%  { transform: translate3d(40vw, -8px, 0)                  scale(var(--scale,1)) rotate( 1deg); }
+  70%  { transform: translate3d(85vw, 16px, 0)                  scale(var(--scale,1)) rotate(-1deg); }
+  100% { transform: translate3d(calc(100vw + 320px),  6px, 0)  scale(var(--scale,1)) rotate( 0deg); }
+}
+@keyframes swimC {
+  0%   { transform: translate3d(calc(100vw + 320px),  0,   0) scaleX(-1) scale(var(--scale,1)); }
+  50%  { transform: translate3d(-320px, 22px, 0)               scaleX(-1) scale(var(--scale,1)); }
+  100% { transform: translate3d(-320px, 22px, 0)               scaleX(-1) scale(var(--scale,1)); }
+}
+@keyframes swimD {
+  0%   { transform: translate3d(calc(100vw + 320px), 8px, 0)  scaleX(-1) scale(var(--scale,1)) rotate( 1deg); }
+  40%  { transform: translate3d(60vw, -10px, 0)                scaleX(-1) scale(var(--scale,1)) rotate(-1deg); }
+  80%  { transform: translate3d(10vw,  18px, 0)                scaleX(-1) scale(var(--scale,1)) rotate( 1deg); }
+  100% { transform: translate3d(-320px, 8px, 0)                scaleX(-1) scale(var(--scale,1)) rotate( 0deg); }
+}
+
+/* Waves */
+.waves {
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 230px;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 -16px 40px rgba(0,0,0,.60));
+  opacity: .98;
+}
+.wave {
+  position: absolute;
+  left: -12%; right: -12%; bottom: 0;
+  height: 170px;
+  background-repeat: repeat-x;
+  animation: waveMove linear infinite;
+}
+.wave.w1 {
+  opacity: .80;
+  background-size: 950px 170px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 950 170'%3E%3Cpath d='M0 88 C 150 44, 290 134, 440 88 C 590 42, 730 134, 880 88 C 910 82, 930 82, 950 88 L950 170 L0 170 Z' fill='%23065f8a'/%3E%3C/svg%3E");
+  animation-duration: 14s;
+}
+.wave.w2 {
+  bottom: 26px; opacity: .52;
+  background-size: 1200px 170px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 170'%3E%3Cpath d='M0 98 C 200 60, 380 150, 580 98 C 780 46, 960 150, 1160 98 C 1180 94, 1190 94, 1200 98 L1200 170 L0 170 Z' fill='%23032a45'/%3E%3C/svg%3E");
+  animation-duration: 23s;
+  animation-direction: reverse;
+}
+.wave.w3 {
+  bottom: 52px; opacity: .36;
+  background-size: 1400px 170px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1400 170'%3E%3Cpath d='M0 114 C 240 92, 470 160, 720 114 C 970 68, 1210 160, 1390 114 C 1395 112, 1398 112, 1400 114 L1400 170 L0 170 Z' fill='%23010a18'/%3E%3C/svg%3E");
+  animation-duration: 32s;
+}
+@keyframes waveMove {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-22%); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .rays, .caustics, .particles, .bubble, .wave, .shark, .kelp { animation: none !important; }
+}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
 .shell {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    display: grid;
-    grid-template-columns: 350px 1fr; /* 350px for the controls, the rest for cards */
-    gap: 30px;
+  position: relative;
+  z-index: 5;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 36px 24px 220px; /* bottom padding clears the waves */
 }
 
-/* ========== Navigation Bar ======== */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 10%;
-    background: #43a0eb;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+/* ---------- Top bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.namePlate {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #ffffffdc;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  user-select: none;
 }
 
-.namePlate span {
-    color: #1e293b;
+.logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(0,0,0,.50);
+  border: 1px solid var(--stroke);
 }
 
-.nav-links a {
-    text-decoration: none;
-    color: #64748b;
-    margin: 0 1.5rem;
-    transition: color 0.3s;
+.brand h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: .3px;
 }
 
-.nav-links a.active, .nav-links a:hover {
-    color: #ffffff;
+.brand p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
 }
 
-.logout-btn {
-    padding: 0.5rem 1.2rem;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-    background: white;
-    cursor: pointer;
-    font-weight: 500;
+/* ---------- Shared button styles (mirror login page) ---------- */
+.btn {
+  border: 0;
+  cursor: pointer;
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: .2px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .05s ease, filter .15s ease;
+  user-select: none;
+}
+.btn:active { transform: translateY(1px); }
+.btn:hover  { filter: brightness(1.10); }
+
+.btn-primary {
+  background: linear-gradient(135deg, rgba(51,214,255,.98), rgba(65,255,181,.90));
+  color: #021a24;
+  box-shadow: 0 14px 36px rgba(0,0,0,.40);
+}
+.btn-primary::after {
+  content: "";
+  position: absolute; inset: -55%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.50), transparent 55%);
+  animation: btnshine 2.4s ease-in-out infinite;
+  opacity: .30;
+}
+@keyframes btnshine {
+  0%   { transform: translateX(-70px); }
+  50%  { transform: translateX( 90px); }
+  100% { transform: translateX(-70px); }
 }
 
-/* ========= Search Bar Design ===============*/
-.search-controls {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+.btn-ghost {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.18);
+  color: var(--text);
 }
 
+/* ---------- Search bar ---------- */
 .search-wrapper {
-    margin: 40px auto; /* 40px top/bottom gives the navbar breathing room */
-    display: flex;
-    flex-direction: column; /* Stacks label on top of input */
-    align-items: center;    /* Centers items horizontally */
-    gap:10px;             /* Space between label and search bar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
 }
 
 .search-wrapper label {
-    font-family: 'Trade Winds', cursive;
-    color: #FFFFFF;
-    font-size: 24px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: .5px;
 }
 
-#searchText {
-    width: 100%;
-    padding: 14px 22px;
-    border-radius: 12px; /* Switching from "pill" to partner's rounded-square style */
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid var(--stroke);
-    color: var(--text);
-    font-size: 16px;
-    outline: none;
-    transition: border-color .15s ease, box-shadow .15s ease;
+.search-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
 }
 
-#searchText:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(51, 214, 255, 0.12);
+/* ---------- Shared input style (mirror login .input) ---------- */
+.input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(0,0,0,.25);
+  border: 1px solid var(--stroke);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  width: 100%;
+}
+.input::placeholder { color: rgba(255,255,255,.50); }
+.input:focus {
+  border-color: rgba(51,214,255,.75);
+  box-shadow: 0 0 0 4px rgba(51,214,255,.12);
 }
 
-#searchText::placeholder {
-    color: rgba(255, 255, 255, 0.7);            /* Makes the placeholder text lighter white */
+/* ---------- Panel (glass card base) ---------- */
+.panel {
+  background: linear-gradient(180deg, var(--cardA), var(--cardB));
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
 }
 
-/* ========= Add Buttons ========== */
-.add-btn {
-    background: #41ffb5; /* Seafoam accent from your theme */
-    color: #021227;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s;
+/* ---------- Contact cards grid ---------- */
+.contact-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
 }
 
-.add-btn:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
+/* Individual card */
+.card {
+  background: linear-gradient(180deg, var(--cardA), var(--cardB));
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 22px 20px 18px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.40);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  /* Subtle shimmer line at the top */
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(51,214,255,.50);
+  box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 0 1px rgba(51,214,255,.20);
+}
+.card:hover::before { opacity: 1; }
+
+/* Name */
+.name-header {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--accent2);
+  margin-bottom: 12px;
+  padding-right: 64px; /* clears action buttons */
+}
+
+/* Contact details row */
+.contact-detail {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.contact-detail i {
+  color: var(--accent);
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Card action buttons */
+.card-actions {
+  position: absolute;
+  top: 14px; right: 14px;
+  display: flex;
+  gap: 6px;
 }
 
 .edit-btn, .delete-btn {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #065e91;
-    border-radius: 5px;
-    padding: 5px 8px;
-    cursor: pointer;
-    transition: 0.2s;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.18);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 9px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
 }
+.edit-btn:hover   { background: var(--accent);  border-color: var(--accent);  color: #021a24; }
+.delete-btn:hover { background: var(--danger);  border-color: var(--danger);  color: #fff; }
 
-.edit-btn:hover { background: #43a0eb; color: white; }
-.delete-btn:hover { background: #ff6b6b; color: white; border-color: #ff6b6b; }
-
-/* ========= Inputs ===========*/
-input[type="text"], input[type="password"], input[type="search"], input[type="email"] {
-    border-radius: 25px;
-    text-align: center;
-    width: 80%;
-    margin-left: 10%;
-    margin-bottom: 2%;
-    font-family: 'Geo', sans-serif;
-    
-    /* --- NEW STYLING --- */
-    border: 2px solid #065e91; 
-    padding: 10px 0;           
-    outline: none;             
-    transition: 0.3s;          
-}
-
-/* ========= Contact Cards ===============*/
-.contact-cards {
-    display: grid;
-    /* Changed 150px to 250px for better readability */
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-    /* gap: [row-gap] [column-gap] */
-    gap: 20px 5px; /* 20px space between rows, but only 5px between columns */
-    padding: 20px;
-    clear: both; /* Ensures it starts below the search section */
-    margin-top: 30px;
-    width: 90%;
-    margin: 30px auto;
-}
-.card {
-    /* Glassmorphism effect: semi-transparent with a blur */
-    background: linear-gradient(180deg, var(--cardA), var(--cardB));
-    border: 1px solid var(--stroke);
-    border-radius: var(--radius);
-    padding: 20px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent); /* Glows blue on hover */
-}
-
-/* Styling the text inside the cards based on your variable classes */
-.card .firstName, .card .lastName {
-    display: inline-block;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--accent2); /* Seafoam green for the name */
-    margin-bottom: 10px;
-}
-
-.card .Email, .card .Phone {
-    font-size: 0.9rem;
-    color: var(--muted); /* Muted light blue for details */
-    margin-top: 5px;
-}
-
-/* Action buttons (Edit/Delete) positioned in the top right */
-.card-actions {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    display: flex;
-    gap: 8px;
-}
-
-/* Foot Design */
-
-footer {
-  text-align: center; /* Centers text and inline elements */
-  padding: 10px; /* Optional: adds some space around the content */
-  background-color: #333; /* Optional: for visibility */
-}
-
-footer p{
-    color: white;
-}
-
-
-/* Modal Background (Dimming the rest of the screen) */
+/* ============================================================
+   MODAL
+   ============================================================ */
 .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.70);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
-/* Modal Box */
 .modal-content {
-    width: min(400px, 90%);
-    padding: 30px;
-    animation: modalSlideIn 0.3s ease-out;
+  width: min(420px, 92%);
+  padding: 30px;
+  animation: modalSlideIn .3s ease-out;
 }
-
 @keyframes modalSlideIn {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  from { transform: translateY(-24px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
 }
 
-.hide { display: none !important; }
+.modal-content .field { margin-top: 14px; }
 
 .modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
 }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.hide { display: none !important; }

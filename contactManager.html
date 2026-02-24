@@ -3,97 +3,167 @@
     CoPilot: Google Gemini
     Purpose: Contact Webpage for COP4331 project.
     Desc.: A webpage that allows a logged-in user to search, access, and edit contacts.
-
-    Notes: All comments below are for my personal use for future referencing and are excess.
-        - They are from referencing videos, code, and AI explanations.
     -->
 
-<!DOCTYPE html> <!-- Declares the HTML type -->
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Manager Page</title>
+    <title>Diver's Manifest</title>
 
-    <!-- Design and Style Sheets -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Fonts: match login page exactly -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="css/contactPage.css">
+
     <!-- Functionality -->
     <script type="text/javascript" src="js/code.js"></script>
 </head>
 
 <body onload="requireLogin()">
-<div class="shell">
+
+  <!-- ░░ Ocean scene (mirrors login page) ░░ -->
+  <div class="ocean" aria-hidden="true">
+    <div class="rays"></div>
+    <div class="caustics"></div>
+    <div class="glow"></div>
+    <div class="particles"></div>
+
+    <!-- Sharks -->
+    <svg class="shark" style="--top:10%;--dur:16s;--delay:-3s;--scale:1.05;--op:.22;--anim:swimB;" viewBox="0 0 220 120">
+      <path fill="rgba(255,255,255,.98)" d="M10,70 C40,55 65,50 92,52 C120,54 150,45 170,32 C182,24 198,22 210,26 C196,35 189,44 186,52 C200,55 212,62 218,70 C202,67 187,66 172,69 C155,72 139,80 118,82 C90,84 62,82 40,76 C30,73 20,72 10,70 Z"/>
+      <path fill="rgba(255,255,255,.98)" d="M120,55 L138,38 L132,60 Z"/>
+    </svg>
+    <svg class="shark" style="--top:30%;--dur:21s;--delay:-12s;--scale:.82;--op:.17;--anim:swimC;" viewBox="0 0 220 120">
+      <path fill="rgba(255,255,255,.98)" d="M10,70 C40,55 65,50 92,52 C120,54 150,45 170,32 C182,24 198,22 210,26 C196,35 189,44 186,52 C200,55 212,62 218,70 C202,67 187,66 172,69 C155,72 139,80 118,82 C90,84 62,82 40,76 C30,73 20,72 10,70 Z"/>
+      <path fill="rgba(255,255,255,.98)" d="M120,55 L138,38 L132,60 Z"/>
+    </svg>
+    <svg class="shark" style="--top:55%;--dur:26s;--delay:-19s;--scale:.65;--op:.13;--anim:swimD;" viewBox="0 0 220 120">
+      <path fill="rgba(255,255,255,.98)" d="M10,70 C40,55 65,50 92,52 C120,54 150,45 170,32 C182,24 198,22 210,26 C196,35 189,44 186,52 C200,55 212,62 218,70 C202,67 187,66 172,69 C155,72 139,80 118,82 C90,84 62,82 40,76 C30,73 20,72 10,70 Z"/>
+      <path fill="rgba(255,255,255,.98)" d="M120,55 L138,38 L132,60 Z"/>
+    </svg>
+
+    <!-- Kelp -->
+    <svg class="kelp k2" viewBox="0 0 120 260" style="left:4%;">
+      <path d="M60 260 C52 210, 78 180, 58 130 C42 90, 70 70, 52 30" fill="none" stroke="rgba(65,255,181,.70)" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+      <path d="M70 260 C74 200, 42 170, 68 120 C88 80, 58 60, 74 22" fill="none" stroke="rgba(51,214,255,.55)" stroke-width="7" stroke-linecap="round" opacity=".45"/>
+    </svg>
+    <svg class="kelp k3" viewBox="0 0 120 260" style="right:5%;">
+      <path d="M60 260 C50 210, 80 185, 56 135 C40 95, 72 70, 54 30" fill="none" stroke="rgba(65,255,181,.60)" stroke-width="9" stroke-linecap="round" opacity=".50"/>
+      <path d="M72 260 C76 205, 44 175, 70 125 C92 85, 62 64, 76 26" fill="none" stroke="rgba(51,214,255,.50)" stroke-width="6" stroke-linecap="round" opacity=".40"/>
+    </svg>
+
+    <!-- Bubbles -->
+    <span class="bubble" style="left:5%;  width:7px;  height:7px;  animation-duration:9s;  animation-delay:-1s;"></span>
+    <span class="bubble" style="left:12%; width:12px; height:12px; animation-duration:14s; animation-delay:-7s;"></span>
+    <span class="bubble" style="left:18%; width:6px;  height:6px;  animation-duration:8s;  animation-delay:-3s;"></span>
+    <span class="bubble" style="left:25%; width:16px; height:16px; animation-duration:18s; animation-delay:-10s;"></span>
+    <span class="bubble" style="left:33%; width:9px;  height:9px;  animation-duration:11s; animation-delay:-4s;"></span>
+    <span class="bubble" style="left:42%; width:7px;  height:7px;  animation-duration:9.5s;animation-delay:-6s;"></span>
+    <span class="bubble" style="left:50%; width:14px; height:14px; animation-duration:16s; animation-delay:-12s;"></span>
+    <span class="bubble" style="left:58%; width:8px;  height:8px;  animation-duration:10s; animation-delay:-2s;"></span>
+    <span class="bubble" style="left:66%; width:6px;  height:6px;  animation-duration:8.5s;animation-delay:-5s;"></span>
+    <span class="bubble" style="left:74%; width:15px; height:15px; animation-duration:19s; animation-delay:-14s;"></span>
+    <span class="bubble" style="left:82%; width:10px; height:10px; animation-duration:12s; animation-delay:-8s;"></span>
+    <span class="bubble" style="left:90%; width:7px;  height:7px;  animation-duration:9s;  animation-delay:-3s;"></span>
+
+    <!-- Waves -->
+    <div class="waves">
+      <div class="wave w3"></div>
+      <div class="wave w2"></div>
+      <div class="wave w1"></div>
+    </div>
+  </div>
+  <!-- ░░ /Ocean scene ░░ -->
+
+  <!-- ░░ App Shell ░░ -->
+  <div class="shell">
+
+    <!-- Top bar -->
     <header class="topbar">
-        <div class="brand">
-            <div class="logo" aria-hidden="true"></div>
-            <div>
-                <h1 id="namePlateText">Explorer</h1> 
-                <p>Deep Sea Fleet Manager</p>
-            </div>
+      <div class="brand">
+        <img src="images/DiversManifestLogo_COP4331.png" class="logo" alt="Diver's Manifest logo">
+        <div>
+          <h1 id="namePlateText">Explorer</h1>
+          <p>Deep Sea Dive Crew</p>
         </div>
-        <button class="btn btn-ghost" onclick="doLogout()">Surface (Logout)</button>
+      </div>
+      <button class="btn btn-ghost" onclick="doLogout()">
+        <i class="fas fa-arrow-up"></i> Surface (Logout)
+      </button>
     </header>
 
+    <!-- Search + Add -->
     <section class="search-wrapper">
-        <label for="searchText">Search Your Contacts</label>
-        <div class="search-controls">
-            <input type="text" id="searchText" class="input" placeholder="Scan the depths..." onkeyup="searchContacts()">
-            
-            <button class="btn btn-primary" onclick="openAddModal()">
-                <i class="fas fa-plus"></i> Add Contact
-            </button>
-        </div>
+      <label for="searchText">Your Fellow Divers</label>
+      <div class="search-controls">
+        <input type="text" id="searchText" class="input" placeholder="Scan the depths…" onkeyup="searchContacts()">
+        <button class="btn btn-primary" onclick="openAddModal()">
+          <i class="fas fa-plus"></i> Add Diver
+        </button>
+      </div>
     </section>
 
+    <!-- Contact cards -->
     <div id="contactCardsContainer" class="contact-cards"></div>
 
-    <div id="addModal" class="modal-overlay hide">
-        <div class="panel modal-content">
-            <h3>Add New Contact</h3>
-            
-            <div class="field">
-                <input type="text" id="addFirstName" class="input" placeholder="First Name">
-            </div>
-            <div class="field">
-                <input type="text" id="addLastName" class="input" placeholder="Last Name">
-            </div>
-            <div class="field">
-                <input type="text" id="addPhone" class="input" placeholder="Phone" inputmode="numeric" maxlength="10" required pattern="\d{10}" title="Phone number must be exactly 10 digits (numbers only).">
-            </div>
-            <div class="field">
-                <input type="email" id="addEmail" class="input" placeholder="Email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Email must be in the format name@example.com.">
-            </div>
+  </div><!-- /shell -->
 
-            <div class="row" style="margin-top: 20px;">
-                <button class="btn btn-primary" onclick="addContact()">Add to Fleet</button>
-                <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
-            </div>
-            
-            <span id="addContactResult"></span>
-        </div>
+  <!-- ░░ Add Modal ░░ -->
+  <div id="addModal" class="modal-overlay hide">
+    <div class="panel modal-content">
+      <h3 style="margin-bottom:6px; font-size:1.1rem; color:var(--accent);">
+        <i class="fas fa-user-plus" style="margin-right:8px;"></i>Add New Contact
+      </h3>
+      <div class="field">
+        <input type="text"  id="addFirstName" class="input" placeholder="First Name">
+      </div>
+      <div class="field">
+        <input type="text"  id="addLastName"  class="input" placeholder="Last Name">
+      </div>
+      <div class="field">
+        <input type="text"  id="addPhone"     class="input" placeholder="Phone (10 digits)"
+               inputmode="numeric" maxlength="10" required pattern="\d{10}"
+               title="Phone number must be exactly 10 digits.">
+      </div>
+      <div class="field">
+        <input type="email" id="addEmail"     class="input" placeholder="Email"
+               required pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+               title="Email must be in the format name@example.com.">
+      </div>
+      <div class="row" style="margin-top:20px;">
+        <button class="btn btn-primary"  onclick="addContact()">Add to Fleet</button>
+        <button class="btn btn-ghost"    onclick="closeAddModal()">Cancel</button>
+      </div>
+      <span id="addContactResult" style="display:block;margin-top:10px;font-size:13px;color:var(--danger);"></span>
     </div>
-</div>
+  </div>
 
-<template id="contactCardTemplate">
+  <!-- ░░ Contact Card Template ░░ -->
+  <template id="contactCardTemplate">
     <article class="card">
-        <div class="card-actions">
-            <button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button>
-            <button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
-        </div>
-
-        <h3 class="name-header">
-            <span class="firstName"></span> <span class="lastName"></span>
-        </h3>
-
-        <div class="Email"></div>
-        <div class="Phone"></div>
+      <div class="card-actions">
+        <button class="edit-btn"   title="Edit">  <i class="fas fa-edit"></i></button>
+        <button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
+      </div>
+      <h3 class="name-header">
+        <span class="firstName"></span>&nbsp;<span class="lastName"></span>
+      </h3>
+      <div class="contact-detail Email">
+        <i class="fas fa-envelope"></i> <span class="val"></span>
+      </div>
+      <div class="contact-detail Phone">
+        <i class="fas fa-phone"></i> <span class="val"></span>
+      </div>
     </article>
-</template>
-<script>
-	searchContacts();
-</script>
+  </template>
+
+  <script>searchContacts();</script>
 </body>
 </html>
