@@ -16,10 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     $inData = getRequestInfo();
 
     $id = $inData["id"] ?? 0;
+    $userId = $inData["userId"] ?? 0;
     $newFirstName = trim($inData["firstName"] ?? "");
     $newLastName = trim($inData["lastName"] ?? "");
     $newPhone = trim($inData["phone"] ?? "");
     $newEmail = trim($inData["email"] ?? "");
+    $oldFirstName = trim($inData["oldFirstName"] ?? "");
+    $oldLastName = trim($inData["oldLastName"] ?? "");
+    $oldPhone = trim($inData["oldPhone"] ?? "");
+    $oldEmail = trim($inData["oldEmail"] ?? "");
 
     if (!preg_match('/^\d{10}$/', $newPhone))
     {
@@ -41,28 +46,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     } 
     else 
     {
-        // SQL update statement
-        $stmt = $conn->prepare("UPDATE Contacts SET FirstName=?, LastName=?, Phone=?, Email=? WHERE ID=?");
-        $stmt->bind_param("ssssi", $newFirstName, $newLastName, $newPhone, $newEmail, $id);
-        
-        if ($stmt->execute())
+        $updated = 0;
+
+        if ($id > 0)
         {
-            // Check if any row was actually changed
-            if ($stmt->affected_rows > 0)
+            $stmt = $conn->prepare("UPDATE Contacts SET FirstName=?, LastName=?, Phone=?, Email=? WHERE ID=? AND UserID=?");
+            $stmt->bind_param("ssssii", $newFirstName, $newLastName, $newPhone, $newEmail, $id, $userId);
+
+            if (!$stmt->execute())
             {
-                returnWithInfo("Update Successful");
+                returnWithError($stmt->error);
+                $stmt->close();
+                $conn->close();
+                exit;
             }
-            else
+
+            $updated = $stmt->affected_rows;
+            $stmt->close();
+        }
+
+        if ($updated === 0)
+        {
+            $stmt = $conn->prepare("UPDATE Contacts SET FirstName=?, LastName=?, Phone=?, Email=? WHERE UserID=? AND FirstName=? AND LastName=? AND Phone=? AND Email=? LIMIT 1");
+            $stmt->bind_param("ssssissss", $newFirstName, $newLastName, $newPhone, $newEmail, $userId, $oldFirstName, $oldLastName, $oldPhone, $oldEmail);
+
+            if (!$stmt->execute())
             {
-                returnWithError("No records found or no changes made");
+                returnWithError($stmt->error);
+                $stmt->close();
+                $conn->close();
+                exit;
             }
+
+            $updated = $stmt->affected_rows;
+            $stmt->close();
+        }
+
+        if ($updated > 0)
+        {
+            returnWithInfo("Update Successful");
         }
         else
         {
-            returnWithError($stmt->error);
+            // At this point, either the record wasn't found or values were unchanged.
+            returnWithInfo("No changes made");
         }
 
-        $stmt->close();
         $conn->close();
     }
 

@@ -1,9 +1,13 @@
-const urlBase = 'http://labfor4331.xyz/LAMPAPI';
+const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const urlBase = isLocalHost ? `${window.location.origin}/LAMPAPI` : 'http://labfor4331.xyz/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
 let firstName = "";
 let lastName = "";
+let activeEditContactId = 0;
+let activeEditCard = null;
+let activeEditOriginalContact = null;
 
 function doLogin()
 {
@@ -265,6 +269,226 @@ function addContact()
     }
 }
 
+function setActionMessage(message, isError = false)
+{
+    const actionOut = document.getElementById("contactActionResult");
+    if (!actionOut) return;
+
+    actionOut.style.color = isError ? "#ff6b6b" : "#eaf6ff";
+    actionOut.innerText = message;
+
+    if (message)
+    {
+        setTimeout(() =>
+        {
+            if (actionOut.innerText === message)
+            {
+                actionOut.innerText = "";
+            }
+        }, 2500);
+    }
+}
+
+function getContactId(contact)
+{
+    if (!contact) return 0;
+    const candidate = contact.id ?? contact.ID ?? contact.contactId ?? contact.ContactID ?? 0;
+    return parseInt(candidate, 10) || 0;
+}
+
+function deleteContact(contact, cardElement)
+{
+    if (!readCookie())
+    {
+        setActionMessage("Session expired. Please log in again.", true);
+        window.location.href = "index.html";
+        return;
+    }
+
+    if (!confirm("Delete this contact?"))
+    {
+        return;
+    }
+
+    const contactId = getContactId(contact);
+    const jsonPayload = JSON.stringify({
+        id: contactId,
+        userId: userId,
+        firstName: contact.firstName || "",
+        lastName: contact.lastName || "",
+        phone: contact.phone || "",
+        email: contact.email || ""
+    });
+    const url = `${urlBase}/DeleteContact.${extension}`;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    xhr.onreadystatechange = function ()
+    {
+        if (xhr.readyState !== 4) return;
+
+        if (xhr.status !== 200)
+        {
+            setActionMessage(`Delete failed (HTTP ${xhr.status}).`, true);
+            return;
+        }
+
+        let json;
+        try
+        {
+            json = JSON.parse(xhr.responseText);
+        }
+        catch (e)
+        {
+            setActionMessage("Delete failed (invalid server response).", true);
+            return;
+        }
+
+        if (json.error && json.error.length > 0)
+        {
+            setActionMessage(json.error, true);
+            return;
+        }
+
+        if (cardElement && cardElement.remove)
+        {
+            cardElement.remove();
+        }
+
+        const contactContainer = document.getElementById("contactCardsContainer");
+        if (contactContainer && contactContainer.querySelectorAll(".card").length === 0)
+        {
+            contactContainer.innerHTML = '<p style="color:white; grid-column: 1/-1; text-align:center;">No contacts found.</p>';
+        }
+
+        setActionMessage("Contact deleted.");
+    };
+    xhr.send(jsonPayload);
+}
+
+function openEditModal(contact, cardElement)
+{
+    activeEditContactId = getContactId(contact);
+    activeEditCard = cardElement || null;
+    activeEditOriginalContact = {
+        firstName: contact.firstName || contact.first || "",
+        lastName: contact.lastName || contact.last || "",
+        phone: contact.phone || "",
+        email: contact.email || ""
+    };
+
+    document.getElementById("editFirstName").value = activeEditOriginalContact.firstName;
+    document.getElementById("editLastName").value = activeEditOriginalContact.lastName;
+    document.getElementById("editPhone").value = activeEditOriginalContact.phone;
+    document.getElementById("editEmail").value = activeEditOriginalContact.email;
+    document.getElementById("editContactResult").innerHTML = "";
+    document.getElementById("editModal").classList.remove("hide");
+}
+
+function closeEditModal()
+{
+    activeEditContactId = 0;
+    activeEditCard = null;
+    activeEditOriginalContact = null;
+    document.getElementById("editModal").classList.add("hide");
+    document.getElementById("editContactResult").innerHTML = "";
+}
+
+function saveEditedContact()
+{
+    const out = document.getElementById("editContactResult");
+    if (out) out.innerHTML = "";
+
+    if (!readCookie())
+    {
+        if (out) out.innerHTML = "Session expired. Please log in again.";
+        window.location.href = "index.html";
+        return;
+    }
+
+    const firstNameInput = document.getElementById("editFirstName");
+    const lastNameInput = document.getElementById("editLastName");
+    const phoneInput = document.getElementById("editPhone");
+    const emailInput = document.getElementById("editEmail");
+
+    if (!phoneInput.checkValidity())
+    {
+        phoneInput.reportValidity();
+        return;
+    }
+
+    if (!emailInput.checkValidity())
+    {
+        emailInput.reportValidity();
+        return;
+    }
+
+    const updatedContact = {
+        id: activeEditContactId,
+        userId: userId,
+        firstName: firstNameInput.value.trim(),
+        lastName: lastNameInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        email: emailInput.value.trim(),
+        oldFirstName: activeEditOriginalContact?.firstName || "",
+        oldLastName: activeEditOriginalContact?.lastName || "",
+        oldPhone: activeEditOriginalContact?.phone || "",
+        oldEmail: activeEditOriginalContact?.email || ""
+    };
+
+    const jsonPayload = JSON.stringify(updatedContact);
+    const url = `${urlBase}/EditContact.${extension}`;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    xhr.onreadystatechange = function ()
+    {
+        if (xhr.readyState !== 4) return;
+
+        if (xhr.status !== 200)
+        {
+            if (out) out.innerHTML = `Update failed (HTTP ${xhr.status}).`;
+            return;
+        }
+
+        let json;
+        try
+        {
+            json = JSON.parse(xhr.responseText);
+        }
+        catch (e)
+        {
+            if (out) out.innerHTML = "Update failed (invalid server response).";
+            return;
+        }
+
+        if (json.error && json.error.length > 0)
+        {
+            if (out) out.innerHTML = json.error;
+            return;
+        }
+
+        if (activeEditCard)
+        {
+            const firstNameNode = activeEditCard.querySelector(".firstName");
+            const lastNameNode = activeEditCard.querySelector(".lastName");
+            const emailNode = activeEditCard.querySelector(".Email");
+            const phoneNode = activeEditCard.querySelector(".Phone");
+
+            if (firstNameNode) firstNameNode.innerText = updatedContact.firstName;
+            if (lastNameNode) lastNameNode.innerText = updatedContact.lastName;
+            if (emailNode) emailNode.innerText = updatedContact.email;
+            if (phoneNode) phoneNode.innerText = updatedContact.phone;
+        }
+
+        closeEditModal();
+        setActionMessage("Contact updated.");
+    };
+    xhr.send(jsonPayload);
+}
+
 /* 
     Searches for a user the database. 
     Takes a text input that should be correlated to a name.
@@ -316,11 +540,31 @@ function searchContacts() {
 
             json.results.forEach(contact => {
                 const card = contactCardTemplate.content.cloneNode(true);
+                const cardElement = card.querySelector(".card");
+                const resolvedContact = {
+                    id: getContactId(contact),
+                    firstName: contact.firstName || contact.first || "",
+                    lastName: contact.lastName || contact.last || "",
+                    phone: contact.phone || "",
+                    email: contact.email || ""
+                };
 
-                if (card.querySelector(".firstName")) card.querySelector(".firstName").innerText = contact.firstName || contact.first || "";
-                if (card.querySelector(".lastName")) card.querySelector(".lastName").innerText = contact.lastName || contact.last || "";
-                if (card.querySelector(".Email")) card.querySelector(".Email").innerText = contact.email || "";
-                if (card.querySelector(".Phone")) card.querySelector(".Phone").innerText = contact.phone || "";
+                if (card.querySelector(".firstName")) card.querySelector(".firstName").innerText = resolvedContact.firstName;
+                if (card.querySelector(".lastName")) card.querySelector(".lastName").innerText = resolvedContact.lastName;
+                if (card.querySelector(".Email")) card.querySelector(".Email").innerText = resolvedContact.email;
+                if (card.querySelector(".Phone")) card.querySelector(".Phone").innerText = resolvedContact.phone;
+
+                const deleteBtn = card.querySelector(".delete-btn");
+                if (deleteBtn)
+                {
+                    deleteBtn.addEventListener("click", () => deleteContact(resolvedContact, cardElement));
+                }
+
+                const editBtn = card.querySelector(".edit-btn");
+                if (editBtn)
+                {
+                    editBtn.addEventListener("click", () => openEditModal(resolvedContact, cardElement));
+                }
 
                 contactContainer.appendChild(card);
             });
@@ -398,9 +642,4 @@ function closeAddModal() {
     // Optional: Clear the result message when closing
     document.getElementById("addContactResult").innerHTML = "";
 }
-
-
-// Update your existing addContact to close the modal on success
-// After document.getElementById("addContactResult").innerHTML = "Contact has been added";
-// Add: setTimeout(closeAddModal, 1500);
 
