@@ -341,8 +341,3 @@ function closeAddModal() {
     document.getElementById("addContactResult").innerHTML = "";
 }
 
-
-// Update your existing addContact to close the modal on success
-// After document.getElementById("addContactResult").innerHTML = "Contact has been added";
-// Add: setTimeout(closeAddModal, 1500);
-
