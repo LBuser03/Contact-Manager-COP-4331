@@ -15,8 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
     $inData = getRequestInfo();
 
-    $id = $inData["id"];
-    $userId = $inData["userId"];
+    $id = $inData["id"] ?? 0;
+    $userId = $inData["userId"] ?? 0;
+    $firstName = trim($inData["firstName"] ?? "");
+    $lastName = trim($inData["lastName"] ?? "");
+    $phone = trim($inData["phone"] ?? "");
+    $email = trim($inData["email"] ?? "");
 
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "contact_manager");
     
@@ -26,26 +30,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     } 
     else 
     {
-        $stmt = $conn->prepare("DELETE FROM Contacts WHERE ID=? AND UserID=?");
-        $stmt->bind_param("ii", $id, $userId);
-        
-        if ($stmt->execute())
+        $deleted = 0;
+
+        if ($id > 0)
         {
-            if ($stmt->affected_rows > 0)
+            $stmt = $conn->prepare("DELETE FROM Contacts WHERE ID=? AND UserID=?");
+            $stmt->bind_param("ii", $id, $userId);
+
+            if (!$stmt->execute())
             {
-                returnWithInfo("Contact Deleted Successfully");
+                returnWithError($stmt->error);
+                $stmt->close();
+                $conn->close();
+                exit;
             }
-            else
+
+            $deleted = $stmt->affected_rows;
+            $stmt->close();
+        }
+
+        if ($deleted === 0)
+        {
+            $stmt = $conn->prepare("DELETE FROM Contacts WHERE UserID=? AND FirstName=? AND LastName=? AND Phone=? AND Email=? LIMIT 1");
+            $stmt->bind_param("issss", $userId, $firstName, $lastName, $phone, $email);
+
+            if (!$stmt->execute())
             {
-                returnWithError("No record found or you do not have permission to delete this contact");
+                returnWithError($stmt->error);
+                $stmt->close();
+                $conn->close();
+                exit;
             }
+
+            $deleted = $stmt->affected_rows;
+            $stmt->close();
+        }
+
+        if ($deleted > 0)
+        {
+            returnWithInfo("Contact Deleted Successfully");
         }
         else
         {
-            returnWithError($stmt->error);
+            returnWithError("No record found or you do not have permission to delete this contact");
         }
 
-        $stmt->close();
         $conn->close();
     }
 
