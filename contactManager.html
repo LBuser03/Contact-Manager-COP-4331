@@ -103,116 +103,64 @@
     <div id="contactCardsContainer" class="contact-cards"></div>
     <div id="contactActionResult" style="text-align:center; color:white; margin-top: 8px;"></div>
 
+    <!-- ░░ Add Modal ░░ -->
     <div id="addModal" class="modal-overlay hide">
-        <div class="panel modal-content">
-            <h3>Add New Contact</h3>
-            
-            <div class="field">
-                <input type="text" id="addFirstName" class="input" placeholder="First Name">
-            </div>
-            <div class="field">
-                <input type="text" id="addLastName" class="input" placeholder="Last Name">
-            </div>
-            <div class="field">
-                <input type="text" id="addPhone" class="input" placeholder="Phone" inputmode="numeric" maxlength="10" required pattern="\d{10}" title="Phone number must be exactly 10 digits (numbers only).">
-            </div>
-            <div class="field">
-                <input type="email" id="addEmail" class="input" placeholder="Email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Email must be in the format name@example.com.">
-            </div>
-
-            <div class="row" style="margin-top: 20px;">
-                <button class="btn btn-primary" onclick="addContact()">Add to Fleet</button>
-                <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
-            </div>
-            
-            <span id="addContactResult"></span>
+      <div class="panel modal-content">
+        <h3 style="margin-bottom:6px; font-size:1.1rem; color:var(--accent);">
+          <i class="fas fa-user-plus" style="margin-right:8px;"></i>Add A New Diver
+        </h3>
+        <div class="field">
+          <input type="text"  id="addFirstName" class="input" placeholder="First Name">
         </div>
+        <div class="field">
+          <input type="text"  id="addLastName"  class="input" placeholder="Last Name">
+        </div>
+        <div class="field">
+          <input type="text"  id="addPhone" class="input" placeholder="Phone (10 digits)"
+                 inputmode="numeric" maxlength="10" required pattern="\d{10}"
+                 title="Phone number must be exactly 10 digits.">
+        </div>
+        <div class="field">
+          <input type="email" id="addEmail" class="input" placeholder="Email"
+                 required pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                 title="Email must be in the format name@example.com.">
+        </div>
+        <div class="row" style="margin-top:20px;">
+          <button class="btn btn-primary" onclick="addContact()">Add To Team</button>
+          <button class="btn btn-ghost"   onclick="closeAddModal()">Cancel</button>
+        </div>
+        <span id="addContactResult" style="display:block;margin-top:10px;font-size:13px;color:var(--danger);"></span>
+      </div>
     </div>
 
+    <!-- ░░ Edit Modal ░░ -->
     <div id="editModal" class="modal-overlay hide">
-        <div class="panel modal-content">
-            <h3>Edit Contact</h3>
-
-            <div class="field">
-                <input type="text" id="editFirstName" class="input" placeholder="First Name">
-            </div>
-            <div class="field">
-                <input type="text" id="editLastName" class="input" placeholder="Last Name">
-            </div>
-            <div class="field">
-                <input type="text" id="editPhone" class="input" placeholder="Phone" inputmode="numeric" maxlength="10" required pattern="\d{10}" title="Phone number must be exactly 10 digits (numbers only).">
-            </div>
-            <div class="field">
-                <input type="email" id="editEmail" class="input" placeholder="Email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Email must be in the format name@example.com.">
-            </div>
-
-            <div class="row" style="margin-top: 20px;">
-                <button class="btn btn-primary" onclick="saveEditedContact()">Save Changes</button>
-                <button class="btn btn-ghost" onclick="closeEditModal()">Cancel</button>
-            </div>
-
-            <span id="editContactResult"></span>
+      <div class="panel modal-content">
+        <h3 style="margin-bottom:6px; font-size:1.1rem; color:var(--accent);">
+          <i class="fas fa-user-edit" style="margin-right:8px;"></i>Edit Diver Info
+        </h3>
+        <div class="field">
+          <input type="text"  id="editFirstName" class="input" placeholder="First Name">
         </div>
-    </div>
-</div>
-
-  <!-- ░░ Add Modal ░░ -->
-  <div id="addModal" class="modal-overlay hide">
-    <div class="panel modal-content">
-      <h3 style="margin-bottom:6px; font-size:1.1rem; color:var(--accent);">
-        <i class="fas fa-user-plus" style="margin-right:8px;"></i>Add A New Diver
-      </h3>
-      <div class="field">
-        <input type="text"  id="addFirstName" class="input" placeholder="First Name">
+        <div class="field">
+          <input type="text"  id="editLastName"  class="input" placeholder="Last Name">
+        </div>
+        <div class="field">
+          <input type="text"  id="editPhone" class="input" placeholder="Phone (10 digits)"
+                 inputmode="numeric" maxlength="10" required pattern="\d{10}"
+                 title="Phone number must be exactly 10 digits (numbers only).">
+        </div>
+        <div class="field">
+          <input type="email" id="editEmail" class="input" placeholder="Email"
+                 required pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                 title="Email must be in the format name@example.com.">
+        </div>
+        <div class="row" style="margin-top:20px;">
+          <button class="btn btn-primary" onclick="saveEditedContact()">Save Changes</button>
+          <button class="btn btn-ghost"   onclick="closeEditModal()">Cancel</button>
+        </div>
+        <span id="editContactResult" style="display:block;margin-top:10px;font-size:13px;color:var(--danger);"></span>
       </div>
-      <div class="field">
-        <input type="text"  id="addLastName"  class="input" placeholder="Last Name">
-      </div>
-      <div class="field">
-        <input type="text"  id="addPhone" class="input" placeholder="Phone (10 digits)"
-               inputmode="numeric" maxlength="10" required pattern="\d{10}"
-               title="Phone number must be exactly 10 digits.">
-      </div>
-      <div class="field">
-        <input type="email" id="addEmail" class="input" placeholder="Email"
-               required pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-               title="Email must be in the format name@example.com.">
-      </div>
-      <div class="row" style="margin-top:20px;">
-        <button class="btn btn-primary" onclick="addContact()">Add To Team</button>
-        <button class="btn btn-ghost"   onclick="closeAddModal()">Cancel</button>
-      </div>
-      <span id="addContactResult" style="display:block;margin-top:10px;font-size:13px;color:var(--danger);"></span>
-    </div>
-  </div>
-
-  <!-- ░░ Edit Modal ░░ -->
-  <div id="editModal" class="modal-overlay hide">
-    <div class="panel modal-content">
-      <h3 style="margin-bottom:6px; font-size:1.1rem; color:var(--accent);">
-        <i class="fas fa-user-edit" style="margin-right:8px;"></i>Edit Diver Info
-      </h3>
-      <div class="field">
-        <input type="text"  id="editFirstName" class="input" placeholder="First Name">
-      </div>
-      <div class="field">
-        <input type="text"  id="editLastName"  class="input" placeholder="Last Name">
-      </div>
-      <div class="field">
-        <input type="text"  id="editPhone" class="input" placeholder="Phone (10 digits)"
-               inputmode="numeric" maxlength="10" required pattern="\d{10}"
-               title="Phone number must be exactly 10 digits (numbers only).">
-      </div>
-      <div class="field">
-        <input type="email" id="editEmail" class="input" placeholder="Email"
-               required pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-               title="Email must be in the format name@example.com.">
-      </div>
-      <div class="row" style="margin-top:20px;">
-        <button class="btn btn-primary" onclick="saveEditedContact()">Save Changes</button>
-        <button class="btn btn-ghost"   onclick="closeEditModal()">Cancel</button>
-      </div>
-      <span id="editContactResult" style="display:block;margin-top:10px;font-size:13px;color:var(--danger);"></span>
     </div>
   </div>
 
@@ -220,15 +168,11 @@
   <template id="contactCardTemplate">
     <article class="card">
       <div class="card-actions">
-        <!--
-          The edit button calls openEditModal(this) so your JS can walk up to the
-          parent <article> and read the current firstName / lastName / email / phone
-          values before populating the edit fields and showing #editModal.
-        -->
-        <button class="edit-btn"   title="Edit"   onclick="openEditModal(this)">
+        <!-- Removed onclick handlers to prevent double event firing -->
+        <button class="edit-btn" title="Edit">
           <i class="fas fa-edit"></i>
         </button>
-        <button class="delete-btn" title="Delete" onclick="deleteContact(this)">
+        <button class="delete-btn" title="Delete">
           <i class="fas fa-trash"></i>
         </button>
       </div>
