@@ -1,0 +1,372 @@
+swagger: '2.0'
+info:
+  description: API for user authentication and contact management in the Contact Manager project
+  version: 1.0.0
+  title: Contact Manager API
+  contact:
+    email: your-team@example.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+host: labfor4331.xyz
+basePath: /LAMPAPI
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+
+tags:
+- name: auth
+  description: Login and registration endpoints
+- name: contacts
+  description: Contact CRUD and search endpoints
+
+paths:
+  /Login.php:
+    post:
+      tags:
+      - auth
+      summary: Authenticate a user
+      operationId: loginUser
+      description: Validates user credentials and returns user ID/name on success.
+      parameters:
+      - in: body
+        name: body
+        description: Login credentials
+        required: true
+        schema:
+          $ref: '#/definitions/LoginRequest'
+      responses:
+        200:
+          description: Login response
+          schema:
+            $ref: '#/definitions/LoginResponse'
+
+  /Register.php:
+    post:
+      tags:
+      - auth
+      summary: Register a new user
+      operationId: registerUser
+      description: Creates a new user unless the login name already exists.
+      parameters:
+      - in: body
+        name: body
+        description: Registration data
+        required: true
+        schema:
+          $ref: '#/definitions/RegisterRequest'
+      responses:
+        200:
+          description: Registration response
+          schema:
+            $ref: '#/definitions/MessageResponse'
+
+  /AddContact.php:
+    post:
+      tags:
+      - contacts
+      summary: Add a new contact
+      operationId: addContact
+      description: Adds a contact record for a specific user.
+      parameters:
+      - in: body
+        name: body
+        description: Contact data to add
+        required: true
+        schema:
+          $ref: '#/definitions/AddContactRequest'
+      responses:
+        200:
+          description: Add contact response
+          schema:
+            $ref: '#/definitions/MessageResponse'
+
+  /DeleteContact.php:
+    post:
+      tags:
+      - contacts
+      summary: Delete a contact
+      operationId: deleteContact
+      description: Deletes by ID when provided, otherwise falls back to a full-field match.
+      parameters:
+      - in: body
+        name: body
+        description: Contact identifier or full contact payload
+        required: true
+        schema:
+          $ref: '#/definitions/DeleteContactRequest'
+      responses:
+        200:
+          description: Delete contact response
+          schema:
+            $ref: '#/definitions/MessageResponse'
+
+  /EditContact.php:
+    post:
+      tags:
+      - contacts
+      summary: Edit a contact
+      operationId: editContact
+      description: Updates by ID when provided, otherwise falls back to matching old field values.
+      parameters:
+      - in: body
+        name: body
+        description: New values and contact identifier/matching fields
+        required: true
+        schema:
+          $ref: '#/definitions/EditContactRequest'
+      responses:
+        200:
+          description: Edit contact response
+          schema:
+            $ref: '#/definitions/MessageResponse'
+
+  /SearchContacts.php:
+    post:
+      tags:
+      - contacts
+      summary: Search contacts
+      operationId: searchContacts
+      description: Searches contacts by first or last name for a specific user.
+      parameters:
+      - in: body
+        name: body
+        description: Search query and user ID
+        required: true
+        schema:
+          $ref: '#/definitions/SearchContactsRequest'
+      responses:
+        200:
+          description: Search contacts response
+          schema:
+            $ref: '#/definitions/SearchContactsResponse'
+
+definitions:
+  LoginRequest:
+    type: object
+    required:
+    - login
+    - password
+    properties:
+      login:
+        type: string
+        example: jdoe
+      password:
+        type: string
+        example: mySecurePassword
+
+  LoginResponse:
+    type: object
+    required:
+    - id
+    - firstName
+    - lastName
+    - error
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 5
+      firstName:
+        type: string
+        example: John
+      lastName:
+        type: string
+        example: Doe
+      error:
+        type: string
+        example: ""
+
+  RegisterRequest:
+    type: object
+    required:
+    - loginName
+    - password
+    - firstName
+    - lastName
+    properties:
+      loginName:
+        type: string
+        example: jdoe
+      password:
+        type: string
+        example: mySecurePassword
+      firstName:
+        type: string
+        example: John
+      lastName:
+        type: string
+        example: Doe
+
+  AddContactRequest:
+    type: object
+    required:
+    - firstName
+    - lastName
+    - phone
+    - email
+    - userId
+    properties:
+      firstName:
+        type: string
+        example: Jane
+      lastName:
+        type: string
+        example: Smith
+      phone:
+        type: string
+        example: "4075551234"
+      email:
+        type: string
+        example: jane.smith@example.com
+      userId:
+        type: integer
+        format: int32
+        example: 5
+
+  DeleteContactRequest:
+    type: object
+    required:
+    - userId
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 42
+        description: Preferred unique contact ID for deletion.
+      userId:
+        type: integer
+        format: int32
+        example: 5
+      firstName:
+        type: string
+        example: Jane
+      lastName:
+        type: string
+        example: Smith
+      phone:
+        type: string
+        example: "4075551234"
+      email:
+        type: string
+        example: jane.smith@example.com
+
+  EditContactRequest:
+    type: object
+    required:
+    - userId
+    - firstName
+    - lastName
+    - phone
+    - email
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 42
+        description: Preferred unique contact ID for updates.
+      userId:
+        type: integer
+        format: int32
+        example: 5
+      firstName:
+        type: string
+        example: Janet
+      lastName:
+        type: string
+        example: Smith
+      phone:
+        type: string
+        example: "4075556789"
+      email:
+        type: string
+        example: janet.smith@example.com
+      oldFirstName:
+        type: string
+        example: Jane
+      oldLastName:
+        type: string
+        example: Smith
+      oldPhone:
+        type: string
+        example: "4075551234"
+      oldEmail:
+        type: string
+        example: jane.smith@example.com
+
+  SearchContactsRequest:
+    type: object
+    required:
+    - search
+    - userId
+    properties:
+      search:
+        type: string
+        example: jan
+      userId:
+        type: integer
+        format: int32
+        example: 5
+
+  Contact:
+    type: object
+    required:
+    - id
+    - first
+    - last
+    - email
+    - phone
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 42
+      first:
+        type: string
+        example: Jane
+      last:
+        type: string
+        example: Smith
+      email:
+        type: string
+        example: jane.smith@example.com
+      phone:
+        type: string
+        example: "4075551234"
+
+  SearchContactsResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+      error:
+        type: string
+        example: ""
+      id:
+        type: integer
+        format: int32
+        example: 0
+      firstName:
+        type: string
+        example: ""
+      lastName:
+        type: string
+        example: ""
+
+  MessageResponse:
+    type: object
+    required:
+    - error
+    properties:
+      message:
+        type: string
+        example: Operation completed successfully
+      error:
+        type: string
+        example: ""
